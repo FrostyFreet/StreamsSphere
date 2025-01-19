@@ -22,3 +22,13 @@ export interface featuredMovie{
     vote_average:number ,
     backdrop_path:string
 }
+export interface searchResultTypes{
+    title?:string,
+    id?:number,
+    name?:string
+    poster_path?:string ,
+    vote_average?:number ,
+    backdrop_path?:string,
+    overview?:string,
+    type?:string
+}

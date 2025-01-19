@@ -1,34 +1,51 @@
 import React, {useEffect, useState} from "react";
-import {AppBar, Toolbar, Typography, Box, IconButton, Button, Menu, MenuItem, useMediaQuery, Input,} from "@mui/material";
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Box,
+    IconButton,
+    Button,
+    Menu,
+    MenuItem,
+    useMediaQuery,
+    Input,
+    Popper, Divider,
+    ClickAwayListener
+} from "@mui/material";
 import { Menu as MenuIcon, Search } from "@mui/icons-material";
-
 import { useTheme } from "@mui/material/styles";
 import {Link} from "react-router";
 import {fetchByName} from "../fetchByName.tsx";
+import {searchResultTypes} from "../../types.tsx";
 
 const Navbar = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const[searchParam,setSearchParam]=useState<string>("")
-    const[searchResult,setSearchResult]=useState([])
-
+    const[searchResult,setSearchResult]=useState<searchResultTypes[]>([])
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const handleInputChange=(e)=>{setSearchParam(e.target.value),setAnchorEl(e.currentTarget);}
+
     const handleMenuOpen = (event: { currentTarget: React.SetStateAction<null>; }) => {setAnchorEl(event.currentTarget);
+    }
+    const handleMenuClose = () => {
+        setAnchorEl(null)
+        setSearchParam("")
+        setSearchResult([])
     };
-    const handleMenuClose = () => {setAnchorEl(null);
-    };
-
-    const handleInputChange=(e: React.ChangeEvent<HTMLInputElement>)=>{setSearchParam(e.target.value)}
-
     useEffect(() => {
         if (searchParam) {
             fetchByName(searchParam, setSearchResult);
+
         } else {
             setSearchResult([]);
         }
     }, [searchParam]);
 
-    console.log(searchParam)
+    const handleClick=(id:number)=>{
+        console.log(id)
+    }
     return (
         <AppBar position="static" sx={{background: "linear-gradient(90deg, #0F2027, #2C5364)", boxShadow: "none",width: "100%",}}>
             <Toolbar sx={{ padding: 0 }}>
@@ -37,7 +54,7 @@ const Navbar = () => {
                 </Typography>
 
                 {!isMobile && (
-                    <Box sx={{display: "flex", flexGrow: 1, justifyContent: "center", gap: "16px",}}>
+                    <Box sx={{display: "flex", flexGrow: 1, justifyContent: "center", gap: "16px",marginLeft:'250px'}}>
                         <Link to={"/"} style={{textDecoration:'none', color:"white"}}>
                             <Button color="inherit">Home</Button>
                         </Link>
@@ -56,23 +73,73 @@ const Navbar = () => {
                     <Box
                         sx={{display: "flex", alignItems: "center", paddingRight: "16px", gap: "8px",}}>
                         <IconButton color="inherit">
-                            <Search /><Input placeholder={"Search"} sx={{color:'white'}} onChange={handleInputChange}></Input>
-
-                            <Menu
-                                id="searchResult-meni" anchorEl={anchorEl}  open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                                {searchResult.length>0 ?
-                                    searchResult.map((result) => (
-                                        <MenuItem key={result?.id}>{result?.name || result?.title}</MenuItem>
-                                    ))
-                                    :
-                                        <Typography variant={"h5"}>No result found with these params!</Typography>
-                                }
-                            </Menu>
-
-
-
-
+                            <Search />
                         </IconButton>
+                        <Input placeholder={"Search"} sx={{color:'white'}} onChange={handleInputChange} value={searchParam}></Input>
+                        <ClickAwayListener onClickAway={handleMenuClose}>
+                            <Popper
+                                open={Boolean(anchorEl) && searchResult.length > 0}
+                                anchorEl={anchorEl}
+                                placement="bottom-start"
+                                sx={{ zIndex: 1300 }}
+                            >
+                                <Box
+                                    sx={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                        borderRadius: '4px',
+                                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                                        maxWidth: '200px',
+                                        overflow: 'hidden'
+                                    }}
+                                >
+                                    {searchResult.length > 0 ? (
+                                        searchResult.map((result: searchResultTypes, index: number) => (
+                                            <Box key={result.id}>
+                                                {result.type==='movie' &&
+                                                    <Link to={`/movies/${result.id}/${result.title}`}>
+                                                        <Box
+                                                            sx={{padding: "10px", display: "flex", flexDirection: "row", alignItems: "center",
+                                                            '&:hover': { backgroundColor: '#f5f5f5' }, textDecoration:'none'
+                                                    }}
+                                                        >
+                                                        <img
+                                                            src={`https://image.tmdb.org/t/p/w500${result?.poster_path}`}
+                                                            alt={result.title || result.name}
+                                                            style={{ width: "70px", borderRadius: "4px", marginRight: "8px" }} // Adjusted size and margin
+                                                            />
+                                                        <Typography variant="body1" sx={{ color: 'black' }}>{result?.title || result?.name}</Typography>
+                                                        </Box>
+                                                    </Link>
+                                                }
+                                                {result.type==='series' &&
+                                                    <Link to={`/series/${result.id}/${result.name}`}>
+                                                        <Box sx={{padding: "10px", display: "flex", flexDirection: "row", alignItems: "center",
+                                                                        '&:hover': { backgroundColor: '#f5f5f5' },textDecoration:'none'
+                                                        }}>
+                                                            <img src={`https://image.tmdb.org/t/p/w500${result?.poster_path}`}
+                                                                 alt={result.title || result.name}
+                                                                 style={{ width: "70px", borderRadius: "4px", marginRight: "8px" }} // Adjusted size and margin
+                                                            />
+                                                            <Typography variant="body1" sx={{ color: 'black' }}>{result?.title || result?.name}</Typography>
+                                                        </Box>
+                                                    </Link>
+                                                }
+
+                                                {index < searchResult.length - 1 && (
+                                                    <Divider sx={{ height: "2px", backgroundColor: "black" }}/>
+                                                )}
+
+                                            </Box>
+                                        ))
+                                    ) : (
+                                        <Typography variant="body2" sx={{ padding: "8px", textAlign: 'center', color: 'gray' }}>No results found!</Typography>
+                                    )}
+                                </Box>
+                            </Popper>
+                        </ClickAwayListener>
+
+
+
                         <Link to={"/login"} style={{textDecoration:'none', color:"white"}}>
                             <Button color="inherit">Login</Button>
                         </Link>

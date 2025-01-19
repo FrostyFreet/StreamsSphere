@@ -1,4 +1,5 @@
 import axios from "axios";
+import {moviesType, seriesType} from "../types.tsx";
 
 export const fetchByName=async (query:string,setSearchResult)=>{
    await Promise.all([
@@ -9,8 +10,8 @@ export const fetchByName=async (query:string,setSearchResult)=>{
             console.log('Movies response:', moviesResponse.data.results);
             console.log('TV response:', tvResponse.data.results);
             const combinedResults = [
-                 ...moviesResponse.data.results,
-                ... tvResponse.data.results
+                ...moviesResponse.data.results.map((movie: moviesType) => ({ ...movie, type: 'movie' })),
+                ...tvResponse.data.results.map((tvShow: seriesType) => ({ ...tvShow, type: 'series' }))
             ];
             console.log('Combined results:', combinedResults);
             setSearchResult(combinedResults);
