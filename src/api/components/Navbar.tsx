@@ -22,13 +22,15 @@ import {searchResultTypes} from "../../types.tsx";
 const Navbar = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-    const[searchParam,setSearchParam]=useState<string>("")
+    const[searchParam,setSearchParam]=useState< React.SetStateAction<string>>("")
     const[searchResult,setSearchResult]=useState<searchResultTypes[]>([])
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleInputChange=(e)=>{setSearchParam(e.target.value),setAnchorEl(e.currentTarget);}
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchParam(e.target.value);
+        // @ts-expect-error
+        setAnchorEl(e.currentTarget);
+    };
 
-    const handleMenuOpen = (event: { currentTarget: React.SetStateAction<null>; }) => {setAnchorEl(event.currentTarget);
-    }
     const handleMenuClose = () => {
         setAnchorEl(null)
         setSearchParam("")
@@ -43,9 +45,6 @@ const Navbar = () => {
         }
     }, [searchParam]);
 
-    const handleClick=(id:number)=>{
-        console.log(id)
-    }
     return (
         <AppBar position="static" sx={{background: "linear-gradient(90deg, #0F2027, #2C5364)", boxShadow: "none",width: "100%",}}>
             <Toolbar sx={{ padding: 0 }}>
@@ -150,7 +149,7 @@ const Navbar = () => {
                     )
                     :
                     (
-                    <IconButton color="inherit" edge="end" onClick={handleMenuOpen} sx={{ marginLeft: "auto", paddingRight: "16px" }}>
+                    <IconButton color="inherit" edge="end"  sx={{ marginLeft: "auto", paddingRight: "16px" }}>
                         <MenuIcon />
                     </IconButton>
                 )}
