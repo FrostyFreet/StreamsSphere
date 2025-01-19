@@ -50,7 +50,7 @@ const Navbar = () => {
         <AppBar position="static" sx={{background: "linear-gradient(90deg, #0F2027, #2C5364)", boxShadow: "none",width: "100%",}}>
             <Toolbar sx={{ padding: 0 }}>
                 <Typography variant="h6" sx={{flexGrow: isMobile ? 1 : 0, paddingLeft: "16px"}}>
-                    StreamSphere
+                    StreamsSphere
                 </Typography>
 
                 {!isMobile && (
