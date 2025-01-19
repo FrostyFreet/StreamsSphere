@@ -88,7 +88,7 @@ export default function PopularSeries(){
                             }
                         </Typography>
                         <Box sx={{ textAlign: 'center', width: 'auto', marginTop: '16px' }}>
-                            <Link to={`/series/${clickedSeries?.id}/:${clickedSeries?.name}`}>
+                            <Link to={`/series/${clickedSeries?.id}/${clickedSeries?.name}`}>
                                 <Button variant="contained" color="primary">
                                     Watch Now
                                 </Button>

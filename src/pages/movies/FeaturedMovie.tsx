@@ -44,7 +44,7 @@ export default function FeaturedMovie(){
                     {featuredMovie?.title}
                 </Typography>
 
-                <Link to={`/${featuredMovie?.id}/${featuredMovie?.title}`}>
+                <Link to={`/movies/${featuredMovie?.id}/${featuredMovie?.title}`}>
                     <IconButton
                         sx={{
                             position: "absolute",
