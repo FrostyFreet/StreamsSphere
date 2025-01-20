@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import {
     AppBar,
     Toolbar,
@@ -24,11 +24,9 @@ const Navbar = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const[searchParam,setSearchParam]=useState< React.SetStateAction<string>>("")
     const[searchResult,setSearchResult]=useState<searchResultTypes[]>([])
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchParam(e.target.value);
-        // @ts-expect-error
-        setAnchorEl(e.currentTarget);
     };
 
     const handleMenuClose = () => {
@@ -74,7 +72,11 @@ const Navbar = () => {
                         <IconButton color="inherit">
                             <Search />
                         </IconButton>
-                        <Input placeholder={"Search"} sx={{color:'white'}} onChange={handleInputChange} value={searchParam}></Input>
+                        <Input placeholder={"Search"} sx={{color:'white'}}
+                               onChange={handleInputChange} value={searchParam}
+                               onFocus={(e)=> setAnchorEl(e.currentTarget)}>
+                        </Input>
+
                         <ClickAwayListener onClickAway={handleMenuClose}>
                             <Popper
                                 open={Boolean(anchorEl) && searchResult.length > 0}
@@ -149,15 +151,15 @@ const Navbar = () => {
                     )
                     :
                     (
-                    <IconButton color="inherit" edge="end"  sx={{ marginLeft: "auto", paddingRight: "16px" }}>
+                    <Button style={{ marginLeft: "auto", paddingRight: "16px",color:'white' }} onClick={(e)=>setAnchorEl(e.currentTarget)} >
                         <MenuIcon />
-                    </IconButton>
+                    </Button>
                 )}
             </Toolbar>
 
             {/* Mobile Menu */}
             {isMobile && (
-                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose} anchorOrigin={{ vertical: "top", horizontal: "right" }} transformOrigin={{ vertical: "top", horizontal: "right" }} sx={{
+                <Menu open={Boolean(anchorEl)} onClose={handleMenuClose} anchorOrigin={{ vertical: "top", horizontal: "right" }} transformOrigin={{ vertical: "top", horizontal: "right" }} sx={{
                     "& .MuiPaper-root": {
                         background: "linear-gradient(90deg, #0F2027, #2C5364)",
                         color: "white",
@@ -173,8 +175,76 @@ const Navbar = () => {
                         <MenuItem onClick={handleMenuClose}>TV Shows</MenuItem>
                     </Link>
 
-                    <MenuItem><Search /><Input placeholder={"Search"} sx={{color:'white'}} onChange={handleInputChange}></Input></MenuItem>
+                    <MenuItem><Search />
+                        <Input placeholder={"Search"} sx={{color:'white'}}
+                               onChange={handleInputChange} value={searchParam}
+                               onFocus={(e)=> setAnchorEl(e.currentTarget)}
+                        >
+                        </Input>
 
+                    </MenuItem>
+                    <ClickAwayListener onClickAway={handleMenuClose}>
+                        <Popper
+                            open={Boolean(anchorEl) && searchResult.length > 0}
+                            anchorEl={anchorEl}
+                            placement="bottom"
+                            sx={{ zIndex: 1300 }}
+                        >
+                            <Box
+                                sx={{
+                                    marginTop:'150px',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    borderRadius: '4px',
+                                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                                    maxWidth: '200px',
+                                    overflow: 'hidden'
+                                }}
+                            >
+                                {searchResult.length > 0 ? (
+                                    searchResult.slice(0,4).map((result: searchResultTypes, index: number) => (
+                                        <Box key={result.id}>
+                                            {result.type==='movie' &&
+                                                <Link to={`/movies/${result.id}/${result.title}`}>
+                                                    <Box
+                                                        sx={{padding: "10px", display: "flex", flexDirection: "row", alignItems: "center",
+                                                            '&:hover': { backgroundColor: '#f5f5f5' }, textDecoration:'none'
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={`https://image.tmdb.org/t/p/w500${result?.poster_path}`}
+                                                            alt={result.title || result.name}
+                                                            style={{ width: "70px", borderRadius: "4px", marginRight: "8px" }} // Adjusted size and margin
+                                                        />
+                                                        <Typography variant="body1" sx={{ color: 'black' }}>{result?.title || result?.name}</Typography>
+                                                    </Box>
+                                                </Link>
+                                            }
+                                            {result.type==='series' &&
+                                                <Link to={`/series/${result.id}/${result.name}`}>
+                                                    <Box sx={{padding: "10px", display: "flex", flexDirection: "row", alignItems: "center",
+                                                        '&:hover': { backgroundColor: '#f5f5f5' },textDecoration:'none'
+                                                    }}>
+                                                        <img src={`https://image.tmdb.org/t/p/w500${result?.poster_path}`}
+                                                             alt={result.title || result.name}
+                                                             style={{ width: "70px", borderRadius: "4px", marginRight: "8px" }} // Adjusted size and margin
+                                                        />
+                                                        <Typography variant="body1" sx={{ color: 'black' }}>{result?.title || result?.name}</Typography>
+                                                    </Box>
+                                                </Link>
+                                            }
+
+                                            {index < searchResult.length - 1 && (
+                                                <Divider sx={{ height: "2px", backgroundColor: "black" }}/>
+                                            )}
+
+                                        </Box>
+                                    ))
+                                ) : (
+                                    <Typography variant="body2" sx={{ padding: "8px", textAlign: 'center', color: 'gray' }}>No results found!</Typography>
+                                )}
+                            </Box>
+                        </Popper>
+                    </ClickAwayListener>
                     <Link to={"/login"} style={{textDecoration:'none', color:"white"}}>
                         <MenuItem onClick={handleMenuClose}>Login</MenuItem>
                     </Link>

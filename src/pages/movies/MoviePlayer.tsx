@@ -9,14 +9,17 @@ import {moviesType} from "../../types.tsx";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 import CloseIcon from "@mui/icons-material/Close";
-
+import axios from "axios";
+import ReactPlayer from 'react-player'
 
 
 export default function MoviePlayer(){
     const {id} = useParams();
     const[recommendedMovies,setRecommendedMovies]=useState<moviesType[]>([])
+    const[resp,setResp]=useState<moviesType[]>([])
     const [open, setOpen] = useState(false);
     const[clickedMovie,setClickedMovie]=useState<moviesType | undefined>()
+
 
     const handleClickOpen = (id:number) => {
         const found=recommendedMovies.find((movie:moviesType)=>movie.id===id)
@@ -26,14 +29,31 @@ export default function MoviePlayer(){
     const handleClose = () => {setOpen(false);};
 
     useEffect(() => {
+        axios.get(`https://vidsrc.cc/v2/embed/movie/${id}`)
+            .then((response)=>setResp(response.data))
         fetchRecommendedMovies(setRecommendedMovies)
     }, [id]);
+    console.log(resp)
+
     return (
         <>
             <Navbar/>
-            <Box style={{display:'flex', justifyContent:'center',alignItems:'center',height:'50vh',width:'100%',paddingBottom:'25px'}}>
-                <iframe src={`https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=false`}
-                        style={{width: "50%", height: '100%', overflow: 'auto'}} allowFullScreen={true}></iframe>
+            <Box
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    paddingBottom: '25px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                }}
+            >
+                <iframe
+                    src={`https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=false`}
+                    className={'responsive-iframe'}
+                    allowFullScreen={true}
+                />
             </Box>
 
             <Typography variant={"h4"} style={{paddingBottom:'0',marginLeft:'55px'}}>Recommended by others</Typography>

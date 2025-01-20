@@ -7,13 +7,12 @@ export const fetchByName=async (query: React.SetStateAction<string>, setSearchRe
          axios.get(`https://api.themoviedb.org/3/search/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&query=${query}`)
     ])
         .then(([moviesResponse, tvResponse]) => {
-            console.log('Movies response:', moviesResponse.data.results);
-            console.log('TV response:', tvResponse.data.results);
+
             const combinedResults = [
                 ...moviesResponse.data.results.map((movie: moviesType) => ({ ...movie, type: 'movie' })),
                 ...tvResponse.data.results.map((tvShow: seriesType) => ({ ...tvShow, type: 'series' }))
             ];
-            console.log('Combined results:', combinedResults);
+
             setSearchResult(combinedResults);
         })
         .catch((error) => {

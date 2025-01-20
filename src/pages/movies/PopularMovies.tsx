@@ -25,7 +25,7 @@ export default function PopularMovies(){
     const handleClose = () => {
         setOpen(false);
     };
-    console.log(clickedMovie)
+
     return(
         <>
             <Box sx={{background: "linear-gradient(90deg, #0F2027, #2C5364)", padding: "16px", textAlign: "center",}}>

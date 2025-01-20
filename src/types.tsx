@@ -32,3 +32,10 @@ export interface searchResultTypes{
     overview?:string,
     type?:string
 }
+export interface seriesDetailTypes{
+    seasons?:number,
+    episode_count:number,
+    poster_path?:string,
+    season_number:number,
+    overview:string
+}

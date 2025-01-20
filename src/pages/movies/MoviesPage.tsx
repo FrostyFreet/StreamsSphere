@@ -89,7 +89,7 @@ export default function MoviesPage() {
                             }
                         </Typography>
                         <Box sx={{ textAlign: 'center', width: 'auto', marginTop: '16px' }}>
-                            <Link to={`/movies/${clickedMovie?.id}/:${clickedMovie?.title}`}>
+                            <Link to={`/movies/${clickedMovie?.id}/${clickedMovie?.title}`}>
                                 <Button variant="contained" color="primary">
                                     Watch Now
                                 </Button>

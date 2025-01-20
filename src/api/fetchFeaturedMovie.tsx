@@ -1,9 +1,9 @@
 import axios from "axios";
 import {featuredMovie} from "../types.tsx";
 
-export const fetchFeaturedMovie = (setFeaturedMovie: (value: (((prevState: (featuredMovie | undefined)) => (featuredMovie | undefined)) | featuredMovie | undefined)) => void) => {
+export const fetchFeaturedMovie =async (setFeaturedMovie: (value: (((prevState: (featuredMovie | undefined)) => (featuredMovie | undefined)) | featuredMovie | undefined)) => void) => {
     const rand = Math.floor(Math.random() * 20);
-    axios
+   await axios
         .get(`https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_TMDB_APIKEY}`)
         .then((response) => {
             setFeaturedMovie(response.data.results[rand]);

@@ -3,3 +3,17 @@ body{
     color:white;
     font-family: Inter;
 }
+
+.responsive-iframe {
+    width: 100%;
+    height: 500px;
+    padding-bottom: 25px;
+    border:none
+}
+
+@media (min-width: 768px) {
+    .responsive-iframe {
+        width: 50%;
+        margin: 0 auto;
+    }
+}
