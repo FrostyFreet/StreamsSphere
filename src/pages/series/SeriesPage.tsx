@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {moviesType, seriesType} from "../../types.tsx";
+import {seriesType} from "../../types.tsx";
 
 import Navbar from "../../api/components/Navbar.tsx";
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Pagination, Skeleton, Stack, Typography} from "@mui/material";

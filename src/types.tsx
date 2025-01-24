@@ -39,3 +39,13 @@ export interface seriesDetailTypes{
     season_number:number,
     overview:string
 }
+
+export interface genreType {
+    id: number;
+    name: string;
+}
+
+export interface FilterProps<T> {
+    setFilteredData: React.Dispatch<React.SetStateAction<T[]>>
+
+}

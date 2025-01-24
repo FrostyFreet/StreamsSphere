@@ -1,34 +1,16 @@
-
-import {
-    Box,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Typography,
-    FormGroup,
-    FormControlLabel,
-    Checkbox,
-    TextField,
-    Button,
-    Chip,
-    Select,
-    MenuItem,
+import {Box, Accordion, AccordionSummary, AccordionDetails, Typography, TextField, Button, Select, MenuItem, SelectChangeEvent,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {useState} from "react";
-import {log} from "video.js";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {SyntheticEvent, useState} from "react";
+import {useQuery} from "@tanstack/react-query";
 import axios from "axios";
-import {moviesType} from "../../types.tsx";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 import {useLocation} from "react-router";
+import {FilterProps} from "../../types.tsx";
 
-export default function Filter({setFilteredData}){
-    const queryClient = useQueryClient()
+export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
     const[sortBy,setSortBy]=useState<string>("popularity.desc")
-    const[releaseDate,setReleaseDate]=useState<Date>()
-    const[category,setCategory]=useState<string[]>([])
+    const[releaseDate,setReleaseDate]=useState<string>()
+    const[category,setCategory]=useState<number[]>([])
     const[clickedButton,setClickedButton]= useState<{ [ key:string]: boolean }>({})
     const[filtersApplied,setFiltersApplied]=useState<boolean>(false)
     const [genres, setGenres] = useState([]);
@@ -39,10 +21,10 @@ export default function Filter({setFilteredData}){
     let movie=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
     let tv=`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
 
-    const handleSortChange=(e)=>{
+    const handleSortChange=(e: SelectChangeEvent<string>)=>{
         setSortBy(e.target.value)
     }
-    const handleReleaseChange=(e)=>{
+    const handleReleaseChange=(e: React.ChangeEvent<HTMLInputElement>)=>{
         setReleaseDate(e.target.value)
     }
 
@@ -52,24 +34,26 @@ export default function Filter({setFilteredData}){
             [genre]: !prevState[genre]
         }));
 
-        setCategory((prevState) => {
+        setCategory((prevState:number[]) => {
             if (prevState.includes(id)) {
-                return prevState.filter((item) => item !== id);
+                return prevState.filter((item:number) => item !== id);
             } else {
                 return [...prevState, id];
             }
         });
     };
-    const fetchGenres=()=>{
+    const fetchGenres=async ()=>{
+        const moviesUrl=`https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_TMDB_APIKEY}`
+        const seriesUrl=`https://api.themoviedb.org/3/genre/tv/list?api_key=${import.meta.env.VITE_TMDB_APIKEY}`
         if(isMoviePage){
-            axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_TMDB_APIKEY}`)
-                .then((res) => setGenres(res.data.genres))
-                .catch((err) => console.error(err));
+            const response = await axios.get(moviesUrl);
+            setGenres(response.data.genres);
+            return response.data.results;
         }
         if(isSeriesPage){
-            axios.get(`https://api.themoviedb.org/3/genre/tv/list?api_key=${import.meta.env.VITE_TMDB_APIKEY}`)
-                .then((res) => setGenres(res.data.genres))
-                .catch((err) => console.error(err));
+            const response = await axios.get(seriesUrl);
+            setGenres(response.data.genres);
+            return response.data.results;
         }
 
     }
@@ -110,25 +94,23 @@ export default function Filter({setFilteredData}){
     const movies = useQuery({
         queryKey: ["filteredMovies", sortBy, releaseDate, category],
         queryFn: fetchFilteredMovies,
-        enabled: filtersApplied
+        enabled: filtersApplied  && isMoviePage
     });
     const series = useQuery({
         queryKey: ["fetchFilterSeries", sortBy, releaseDate, category],
         queryFn: fetchFilterSeries,
-        enabled: filtersApplied
+        enabled: filtersApplied && isSeriesPage
     });
     const genre = useQuery({
         queryKey: ["genres"],
         queryFn: fetchGenres,
 
     });
-    const applyFilters=(e)=>{
+    const applyFilters=(e: SyntheticEvent)=>{
         e.preventDefault()
-        console.log("movie"+movie)
-        console.log("tv"+tv)
         setFiltersApplied(true)
     }
-    console.log(category)
+
 
 
     return (
