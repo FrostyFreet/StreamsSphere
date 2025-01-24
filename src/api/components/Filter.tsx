@@ -22,6 +22,7 @@ import axios from "axios";
 import {moviesType} from "../../types.tsx";
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
+import {useLocation} from "react-router";
 
 export default function Filter({setFilteredData}){
     const queryClient = useQueryClient()
@@ -31,8 +32,12 @@ export default function Filter({setFilteredData}){
     const[clickedButton,setClickedButton]= useState<{ [ key:string]: boolean }>({})
     const[filtersApplied,setFiltersApplied]=useState<boolean>(false)
     const [genres, setGenres] = useState([]);
+    const location=useLocation()
+    const isMoviePage = location.pathname === '/movies'
+    const isSeriesPage = location.pathname === '/series'
 
-    let url=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
+    let movie=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
+    let tv=`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
 
     const handleSortChange=(e)=>{
         setSortBy(e.target.value)
@@ -56,31 +61,60 @@ export default function Filter({setFilteredData}){
         });
     };
     const fetchGenres=()=>{
-        axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_TMDB_APIKEY}`)
-            .then((res) => setGenres(res.data.genres))
-            .catch((err) => console.error(err));
-    }
+        if(isMoviePage){
+            axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_TMDB_APIKEY}`)
+                .then((res) => setGenres(res.data.genres))
+                .catch((err) => console.error(err));
+        }
+        if(isSeriesPage){
+            axios.get(`https://api.themoviedb.org/3/genre/tv/list?api_key=${import.meta.env.VITE_TMDB_APIKEY}`)
+                .then((res) => setGenres(res.data.genres))
+                .catch((err) => console.error(err));
+        }
 
+    }
     const fetchFilteredMovies=async ()=>{
         if(sortBy){
-            url+=`&sort_by=${sortBy}`
+            movie+=`&sort_by=${sortBy}`
         }
-
         if(releaseDate!==undefined){
-            url+=`&release_date.lte=${releaseDate}`
+            movie+=`&release_date.lte=${releaseDate}`
         }
         if (category.length > 0) {
-            url += `&with_genres=${category.join("%2")}`;
+            movie += `&with_genres=${category.join("%2")}`;
         }
-        url+=`&api_key=${import.meta.env.VITE_TMDB_APIKEY}`
-        console.log(url)
-        const response = await axios.get(url);
+        console.log(movie)
+        const response = await axios.get(movie);
         setFilteredData(response.data.results);
         return response.data.results;
     }
-    const filtered = useQuery({
+    const fetchFilterSeries=async ()=>{
+        if(sortBy){
+            tv+=`&sort_by=${sortBy}`
+        }
+        if(releaseDate!==undefined){
+            tv+=`&release_date.lte=${releaseDate}`
+        }
+        if (category.length > 0) {
+            tv += `&with_genres=${category.join("%2")}`;
+        }
+        console.log(tv)
+        const response = await axios.get(tv);
+        setFilteredData(response.data.results);
+        return response.data.results;
+    }
+
+
+
+
+    const movies = useQuery({
         queryKey: ["filteredMovies", sortBy, releaseDate, category],
         queryFn: fetchFilteredMovies,
+        enabled: filtersApplied
+    });
+    const series = useQuery({
+        queryKey: ["fetchFilterSeries", sortBy, releaseDate, category],
+        queryFn: fetchFilterSeries,
         enabled: filtersApplied
     });
     const genre = useQuery({
@@ -90,7 +124,8 @@ export default function Filter({setFilteredData}){
     });
     const applyFilters=(e)=>{
         e.preventDefault()
-        console.log(url)
+        console.log("movie"+movie)
+        console.log("tv"+tv)
         setFiltersApplied(true)
     }
     console.log(category)
@@ -125,7 +160,7 @@ export default function Filter({setFilteredData}){
                 </Accordion>
 
                 {/* Premier Date Section */}
-                <Accordion defaultExpanded>
+                <Accordion >
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} >
                         <Typography variant="subtitle1">Release date:</Typography>
                     </AccordionSummary>
