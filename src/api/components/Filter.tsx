@@ -5,7 +5,7 @@ import {SyntheticEvent, useState} from "react";
 import {useQuery} from "@tanstack/react-query";
 import axios from "axios";
 import {useLocation} from "react-router";
-import {FilterProps} from "../../types.tsx";
+import {FilterProps, genreType} from "../../types.tsx";
 
 export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
     const[sortBy,setSortBy]=useState<string>("popularity.desc")
@@ -163,9 +163,9 @@ export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                            {genres.map((genre) => (
+                            {genres.map((genre:genreType) => (
                                 <Button key={genre.id} value={genre.name} onClick={() => {
-                                    handleClickButton(genre.name,genre.id);
+                                    handleClickButton(genre?.name,genre.id);
                                 }}   className={`button ${clickedButton[genre.name] ? 'clicked' : ''}`}>{genre.name} </Button>
                             ))}
                         </Box>
