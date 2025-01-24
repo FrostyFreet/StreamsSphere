@@ -17,6 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import {Link} from "react-router";
 import Navbar from "../../api/components/Navbar.tsx";
 import {fetchMoviesPerPage} from "../../api/fetchMoviesPerPage.tsx";
+import Filter from "../../api/components/Filter.tsx";
 
 export default function MoviesPage() {
     const[movies,setMovies]=useState<moviesType[]>([])
@@ -24,6 +25,7 @@ export default function MoviesPage() {
     const [page, setPage] = useState(1);
     const [open, setOpen] = useState(false);
     const[clickedMovie,setClickedMovie]=useState<moviesType | undefined>()
+    const [filteredData,setFilteredData]=useState<moviesType[]>([])
 
     useEffect(() => {
         fetchMoviesPerPage(setMovies,page,setTotalPages)
@@ -37,29 +39,62 @@ export default function MoviesPage() {
     const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
+    console.log("Filtered:"+filteredData)
+
     return(
         <>
             <Navbar/>
-            <Box sx={{display:'flex',justifyContent:'center',alignItems:'center',background: "linear-gradient(90deg, #0F2027, #2C5364)", padding: "16px", textAlign: "center",}}>
-                <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{justifyContent: "center", alignItems: "center",}}>
-                    {movies.map((movie) => (
-                        <Grid sx={{xs:6, sm:4, md:2}} key={movie.id}>
-                            <Box position="relative" sx={{width: "100%", maxWidth: "300px", height: "auto", borderRadius: "8px", overflow: "hidden",}}>
 
-                                <img alt={movie.title} style={{width: "100%", height: "auto", borderRadius: "8px",}}
-                                     src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-                                     onClick={()=>handleClickOpen(movie.id)} loading={"eager"}
-                                />
+            <Box sx={{display:'flex',justifyContent:'center',alignItems:'flex-start',background: "linear-gradient(90deg, #0F2027, #2C5364)", padding: "16px", textAlign: "center",}}>
+                <Box sx={{paddingRight:'10px'}}>
+                    <Filter setFilteredData={setFilteredData}/>
+                </Box>
+                <Grid container spacing={1} sx={{justifyContent: "space-between", alignItems: "center",}}>
+                    {filteredData && filteredData.length>0 ?
+                        (
+                        filteredData.map((filtered)=>(
+                            <Grid size={{xs:6, sm:4, md:2.4}} key={filtered.id}>
+                                <Box position="relative" sx={{width: "100%", maxWidth: "300px", height: "auto", borderRadius: "8px", overflow: "hidden",}}>
 
-                                <Box position="absolute" top={8} left={8} bgcolor="rgba(0, 0, 0, 0.5)" color="white" borderRadius="4px" padding="4px 8px"
-                                     display="flex"
-                                     alignItems="center">
-                                    <StarIcon sx={{ fontSize: "1rem", marginRight: "4px",color:'gold' }} />
-                                    <Typography variant="body2">{movie.vote_average.toFixed(1)}</Typography>
+                                    <img alt={filtered.title} style={{width: "100%", height: "auto", borderRadius: "8px",}}
+                                         src={`https://image.tmdb.org/t/p/original/${filtered.poster_path}`}
+                                         onClick={()=>handleClickOpen(filtered.id)} loading={"eager"}
+                                    />
+
+                                    <Box position="absolute" top={8} left={8} bgcolor="rgba(0, 0, 0, 0.5)" color="white" borderRadius="4px" padding="4px 8px"
+                                         display="flex"
+                                         alignItems="center">
+                                        <StarIcon sx={{ fontSize: "1rem", marginRight: "4px",color:'gold' }} />
+                                        <Typography variant="body2">{filtered.vote_average.toFixed(1)}</Typography>
+                                    </Box>
+
                                 </Box>
+                            </Grid>
 
-                            </Box>
-                        </Grid>
+
+                            ))
+                        )
+                        :
+                        (
+                            movies.map((movie) => (
+                            <Grid size={{xs:6, sm:4, md:2.4}} key={movie.id}>
+                                <Box position="relative" sx={{width: "100%", maxWidth: "300px", height: "auto", borderRadius: "8px", overflow: "hidden",}}>
+
+                                    <img alt={movie.title} style={{width: "100%", height: "auto", borderRadius: "8px",}}
+                                         src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                                         onClick={()=>handleClickOpen(movie.id)} loading={"eager"}
+                                    />
+
+                                    <Box position="absolute" top={8} left={8} bgcolor="rgba(0, 0, 0, 0.5)" color="white" borderRadius="4px" padding="4px 8px"
+                                         display="flex"
+                                         alignItems="center">
+                                        <StarIcon sx={{ fontSize: "1rem", marginRight: "4px",color:'gold' }} />
+                                        <Typography variant="body2">{movie.vote_average.toFixed(1)}</Typography>
+                                    </Box>
+
+                                </Box>
+                            </Grid>
+                        )
                     ))}
                 </Grid>
                 <Dialog open={open} onClose={handleClose}>

@@ -7,9 +7,12 @@ import LoginPage from "./api/LoginPage.tsx";
 import RegisterPage from "./api/RegisterPage.tsx";
 import MoviePlayer from "./pages/movies/MoviePlayer.tsx";
 import SeriesPlayer from "./pages/series/SeriesPlayer.tsx";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+const queryClient = new QueryClient()
 
 function App() {
   return (
+      <QueryClientProvider client={queryClient}>
         <Routes>
             <Route path="/" element={<HomePage />}/>
             <Route path="/movies" element={<MoviesPage />}/>
@@ -20,7 +23,7 @@ function App() {
             <Route path="/series/:id/:name" element={<SeriesPlayer />}/>
 
         </Routes>
-
+      </QueryClientProvider>
   )
 }
 

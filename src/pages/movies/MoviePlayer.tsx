@@ -9,14 +9,13 @@ import {moviesType} from "../../types.tsx";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
-import ReactPlayer from 'react-player'
+import '../../App.css'
+import Iframe from 'react-iframe'
 
 
 export default function MoviePlayer(){
     const {id} = useParams();
     const[recommendedMovies,setRecommendedMovies]=useState<moviesType[]>([])
-    const[resp,setResp]=useState<moviesType[]>([])
     const [open, setOpen] = useState(false);
     const[clickedMovie,setClickedMovie]=useState<moviesType | undefined>()
 
@@ -29,30 +28,20 @@ export default function MoviePlayer(){
     const handleClose = () => {setOpen(false);};
 
     useEffect(() => {
-        axios.get(`https://vidsrc.cc/v2/embed/movie/${id}`)
-            .then((response)=>setResp(response.data))
+
         fetchRecommendedMovies(setRecommendedMovies)
     }, [id]);
-    console.log(resp)
+
 
     return (
         <>
             <Navbar/>
-            <Box
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    paddingBottom: '25px',
-                    position: 'relative',
-                    overflow: 'hidden',
-                }}
-            >
-                <iframe
-                    src={`https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=false`}
+            <Box style={{display:'flex', justifyContent:'center',paddingBottom:'50px',height:'50vh'}}>
+                <Iframe
+                    url={`https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=false`}
                     className={'responsive-iframe'}
                     allowFullScreen={true}
+                    loading={'eager'}
                 />
             </Box>
 

@@ -15,9 +15,10 @@ import {
 } from "@mui/material";
 import { Menu as MenuIcon, Search } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-import {Link} from "react-router";
+import {Link, useLocation} from "react-router";
 import {fetchByName} from "../fetchByName.tsx";
 import {searchResultTypes} from "../../types.tsx";
+
 
 const Navbar = () => {
     const theme = useTheme();
@@ -25,6 +26,11 @@ const Navbar = () => {
     const[searchParam,setSearchParam]=useState< React.SetStateAction<string>>("")
     const[searchResult,setSearchResult]=useState<searchResultTypes[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const location=useLocation()
+    const isHomePage = location.pathname === '/'
+    const isMoviePage = location.pathname === '/movies'
+    const isSeriesPage = location.pathname === '/series'
+
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchParam(e.target.value);
     };
@@ -53,15 +59,15 @@ const Navbar = () => {
                 {!isMobile && (
                     <Box sx={{display: "flex", flexGrow: 1, justifyContent: "center", gap: "16px",marginLeft:'250px'}}>
                         <Link to={"/"} style={{textDecoration:'none', color:"white"}}>
-                            <Button color="inherit">Home</Button>
+                            <Button color="inherit" sx={{...(isHomePage && {textDecoration: 'underline'})}}>Home</Button>
                         </Link>
 
                         <Link to={"/movies"} style={{textDecoration:'none', color:"white"}}>
-                            <Button color="inherit">Movies</Button>
+                            <Button color="inherit" sx={{...(isMoviePage && {textDecoration: 'underline'})}}>Movies</Button>
                         </Link>
 
                         <Link to={"/series"} style={{textDecoration:'none', color:"white"}}>
-                            <Button color="inherit">TV Shows</Button>
+                            <Button color="inherit" sx={{...(isSeriesPage && {textDecoration: 'underline'})}}>TV Shows</Button>
                         </Link>
                     </Box>
                 )}
@@ -69,7 +75,7 @@ const Navbar = () => {
                 {!isMobile ? (
                     <Box
                         sx={{display: "flex", alignItems: "center", paddingRight: "16px", gap: "8px",}}>
-                        <IconButton color="inherit">
+                        <IconButton color="inherit" sx={{'&:hover': {textDecoration:'underline'}}}>
                             <Search />
                         </IconButton>
                         <Input placeholder={"Search"} sx={{color:'white'}}
@@ -94,7 +100,7 @@ const Navbar = () => {
                                     }}
                                 >
                                     {searchResult.length > 0 ? (
-                                        searchResult.map((result: searchResultTypes, index: number) => (
+                                        searchResult.slice(0,5).map((result: searchResultTypes, index: number) => (
                                             <Box key={result.id}>
                                                 {result.type==='movie' &&
                                                     <Link to={`/movies/${result.id}/${result.title}`}>
@@ -142,10 +148,10 @@ const Navbar = () => {
 
 
                         <Link to={"/login"} style={{textDecoration:'none', color:"white"}}>
-                            <Button color="inherit">Login</Button>
+                            <Button color="inherit" sx={{'&:hover': {textDecoration:'underline'}}}>Login</Button>
                         </Link>
                         <Link to={"/register"} style={{textDecoration:'none', color:"white"}}>
-                            <Button color="inherit">Register</Button>
+                            <Button color="inherit" sx={{'&:hover': {textDecoration:'underline'}}}>Register</Button>
                         </Link>
                     </Box>
                     )

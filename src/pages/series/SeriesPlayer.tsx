@@ -35,7 +35,7 @@ export default function SeriesPlayer(){
             <Navbar/>
             <Box style={{display:'flex', justifyContent:'center',paddingBottom:'50px',height:'50vh'}}>
                 <iframe src={`https://vidsrc.cc/v2/embed/tv/${id}?autoPlay=false`}
-                        className={'responsive-iframe'} allowFullScreen={true} controls>
+                        className={'responsive-iframe'} allowFullScreen={true}>
                 </iframe>
             </Box>
 
