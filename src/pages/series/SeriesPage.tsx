@@ -9,7 +9,7 @@ import {fetchSeriesPerPage} from "../../api/fetchSeriesPerPage.tsx";
 import Filter from "../../components/Filter.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {fetchFilteredSeriesPerPage} from "../../api/fetchFilteredSeriesPerPage.tsx";
-import DialogMenu from "../movies/DialogMenu.tsx";
+import SeriesDialogMenu from "./SeriesDialogMenu.tsx";
 
 export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDate,category,setCategory,genres,setGenres}:FilterProps<T>) {
     const[series,setSeries]=useState<seriesType[]>([])
@@ -36,6 +36,7 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
         refetch()
         refetchFiltered()
     };
+    console.log(clickedSeries)
 
     return (
         <>
@@ -137,7 +138,7 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
                     }
 
                 </Grid>
-                <DialogMenu open={open} handleClose={handleClose} clickedMovie={clickedSeries}/>
+                <SeriesDialogMenu open={open} handleClose={handleClose} clickedSeries={clickedSeries}/>
 
             </Box>
             <Stack spacing={2} sx={{ display: "flex", alignItems: "center", marginTop: "16px" }}>

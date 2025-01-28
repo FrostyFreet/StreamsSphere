@@ -9,7 +9,8 @@ import StarIcon from "@mui/icons-material/Star";
 import {fetchRecommendedSeries} from "../../api/fetchRecommendedSeries.tsx";
 import {fetchSeriesDetail} from "../../api/fetchSeriesDetail.tsx";
 import '../../App.css'
-import DialogMenu from "../movies/DialogMenu.tsx";
+
+import SeriesDialogMenu from "./SeriesDialogMenu.tsx";
 
 export default function SeriesPlayer(){
     const {id} = useParams();
@@ -40,7 +41,7 @@ export default function SeriesPlayer(){
             </Box>
 
             <Typography variant={"h4"} style={{paddingBottom:'0',marginLeft:'55px',paddingTop:'25px'}}>Recommended by others</Typography>
-            <Box sx={{display:'flex',justifyContent:'center',alignItems:'center',background: "linear-gradient(90deg, #0F2027, #2C5364)", padding: "16px",textAlign: "center",}}>
+            <Box sx={{display:'flex',justifyContent:'center',alignItems:'center', padding: "16px",textAlign: "center",}}>
                 <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{justifyContent: "center", alignItems: "center",}}>
                     {recommendedSeries.slice(0, 8).map((series:seriesType) => (
                         <Grid sx={{xs:6, sm:4, md:2}} key={series.id}>
@@ -62,7 +63,7 @@ export default function SeriesPlayer(){
                         </Grid>
                     ))}
                 </Grid>
-                <DialogMenu open={open} handleClose={handleClose} clickedMovie={clickedSeries}/>
+                <SeriesDialogMenu open={open} handleClose={handleClose} clickedSeries={clickedSeries}/>
 
             </Box>
         </>

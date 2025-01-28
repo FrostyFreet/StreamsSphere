@@ -9,7 +9,7 @@ import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 import '../../App.css'
 import Iframe from 'react-iframe'
-import DialogMenu from "./DialogMenu.tsx";
+import MoviesDialogMenu from "./MoviesDialogMenu.tsx";
 
 export default function MoviePlayer(){
     const {id} = useParams();
@@ -67,7 +67,7 @@ export default function MoviePlayer(){
                                 </Grid>
                             ))}
                         </Grid>
-                        <DialogMenu open={open} handleClose={handleClose} clickedMovie={clickedMovie}/>
+                        <MoviesDialogMenu open={open} handleClose={handleClose} clickedMovie={clickedMovie}/>
             </Box>
         </>
     );

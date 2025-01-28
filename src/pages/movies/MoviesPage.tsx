@@ -9,7 +9,7 @@ import {fetchMoviesPerPage} from "../../api/fetchMoviesPerPage.tsx";
 import Filter from "../../components/Filter.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {fetchFilteredMoviesPerPage} from "../../api/fetchFilteredMoviesPerPage.tsx";
-import DialogMenu from "./DialogMenu.tsx";
+import MoviesDialogMenu from "./MoviesDialogMenu.tsx";
 
 export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                                           setReleaseDate,
@@ -44,6 +44,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
         refetch()
         refetchFiltered()
     };
+
 
 
     console.log(category)
@@ -152,7 +153,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                         ))}
                 </Grid>
 
-                <DialogMenu open={open} handleClose={handleClose} clickedMovie={clickedMovie}/>
+                <MoviesDialogMenu open={open} handleClose={handleClose} clickedMovie={clickedMovie}/>
 
         </Box>
             <Stack spacing={2} sx={{ display: "flex", alignItems: "center", marginTop: "16px" }}>
