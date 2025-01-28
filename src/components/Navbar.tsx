@@ -9,6 +9,7 @@ import SearchDropDown from "./SearchDropDown.tsx";
 
 export default function Navbar() {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [searchAnchorEl, setSearchAnchorEl] = useState<HTMLElement | null>(null);
     const isMobile = useMediaQuery("(max-width:750px)");
     const handleMenuOpen = (event:React.MouseEvent<HTMLElement>) => {setAnchorEl(event.currentTarget);};
     const[searchParam,setSearchParam]=useState< React.SetStateAction<string>>("")
@@ -96,14 +97,15 @@ export default function Navbar() {
                     </IconButton>
                     <Input placeholder={"Search"} id={"search_input"}
                            onChange={handleInputChange} value={searchParam}
-                           onFocus={(e)=> setAnchorEl(e.currentTarget)}
+                           onFocus={(e)=> setSearchAnchorEl(e.currentTarget)}
                     >
 
                     </Input>
                     <Avatar id={"avatar"}/>
                 </Box>
-                <SearchDropDown anchorEl={anchorEl} handleMenuClose={handleMenuClose} searchResult={searchResult}/>
+                <SearchDropDown anchorEl={searchAnchorEl} handleMenuClose={handleMenuClose} searchResult={searchResult}/>
             </Box>
+
         </>
     )
 }
