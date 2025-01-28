@@ -48,13 +48,13 @@ export default function SeriesPlayer(){
     return (
         <>
             <Navbar/>
-            <Box style={{display:'flex', justifyContent:'center',paddingBottom:'50px',height:'50vh'}}>
+            <Box style={{display:'flex', justifyContent:'center',paddingBottom:'50px',height:'50vh',paddingTop:'35px'}}>
                 <iframe src={`https://vidsrc.cc/v2/embed/tv/${id}/${selectedSeason}/${selectedEpisode}?autoPlay=false`}
                         className={'responsive-iframe'} allowFullScreen={true}>
                 </iframe>
             </Box>
             <Box display={"flex"} gap={"10px"}>
-                <Typography variant={"h4"} style={{paddingBottom:'0',marginLeft:'55px',paddingTop:'25px',}}>Episodes</Typography>
+                <Typography variant={"h4"} style={{paddingBottom:'0',marginLeft:'55px',paddingTop:'25px',}}>Episodes |</Typography>
 
                     <Select
                         id="season-select"
@@ -62,12 +62,21 @@ export default function SeriesPlayer(){
                         defaultValue={"Season 1"}
                         label="Age"
                         onChange={handleChange}
-                        style={{borderStyle:'none'}}
+                        sx={{
+                            color:'gray',
+                            paddingTop:'20px',
+                            '& .MuiOutlinedInput-notchedOutline': {
+                                border: 'none',
+                            },
+                            '& .MuiSelect-icon': {
+                                top: '45%',
+                            },
+                        }}
                     >
                         {numberOfSeasons &&
                             Array.from({ length: numberOfSeasons }, (_, i) => (
                                 <MenuItem value={`${i + 1}`} key={i}>
-                                    {`Episode ${i + 1}`}
+                                    {`Season ${i + 1}`}
                                 </MenuItem>
                             ))
                         }
@@ -80,20 +89,34 @@ export default function SeriesPlayer(){
                         <Grid sx={{xs:6, sm:4, md:2,lg:1}} key={i.id}>
                             <Box position="relative" sx={{width: "100%", maxWidth: "250px", height: "auto", borderRadius: "8px", overflow: "hidden",}}>
                                 {i.still_path?
-                                <img alt={i.name} style={{width: "100%", height: "100%", borderRadius: "8px",}}
-                                     src={`https://image.tmdb.org/t/p/original/${i.still_path}`}
-                                     onClick={()=>setSelectedEpisode(i.episode_number)}
-                                />
+                                    <>
+                                        <img alt={i.name} style={{width: "100%", height: "100%", borderRadius: "8px",boxShadow: "10px 10px 12px black"}}
+                                           src={`https://image.tmdb.org/t/p/original/${i.still_path}`}
+                                           onClick={() => setSelectedEpisode(i.episode_number)}/>
+
+                                        <Box
+                                            position="absolute" top={8} left={8} bgcolor="rgba(0, 0, 0, 0.5)" color="white"
+                                            borderRadius="4px" padding="4px 8px"
+                                            display="flex"
+                                            alignItems="center">
+                                            <StarIcon sx={{fontSize: "1rem", marginRight: "4px", color: 'gold'}}/>
+                                            <Typography variant="body2">{i.vote_average.toFixed(1)}</Typography>
+                                        </Box>
+                                    </>
                                     :
-                                    <Skeleton variant="rectangular" style={{ width: "100%", maxWidth:"200px",height: "auto", borderRadius: "8px",boxShadow: "3px 3px 3px black", }}/>
+                                    <>
+                                        {i.air_date?
+                                            <Typography variant={"h6"}>Coming Soon-Release Date:{i.air_date}</Typography>
+                                            :
+                                            <Typography variant={"h6"}>Coming Soon</Typography>
+                                        }
+                                        <Skeleton variant="rectangular" style={{ marginTop:"15px",width: "100%", maxWidth:"200px",height: "auto", borderRadius: "8px",boxShadow: "3px 3px 3px black", }}/>
+
+                                    </>
+
                                 }
 
-                                <Box position="absolute" top={8} left={8} bgcolor="rgba(0, 0, 0, 0.5)" color="white" borderRadius="4px" padding="4px 8px"
-                                     display="flex"
-                                     alignItems="center">
-                                    <StarIcon sx={{ fontSize: "1rem", marginRight: "4px",color:'gold' }} />
-                                    <Typography variant="body2">{i.vote_average.toFixed(1)}</Typography>
-                                </Box>
+
 
                             </Box>
                             <Box>

@@ -71,4 +71,5 @@ export interface episodeType{
     episode_number:number,
     vote_average:number
     runtime:number
+    air_date?:string
 }
