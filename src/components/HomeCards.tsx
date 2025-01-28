@@ -1,4 +1,4 @@
-import {Box} from "@mui/material";
+import {Box, Skeleton} from "@mui/material";
 
 import {useQuery} from "@tanstack/react-query";
 import {fetchPopularData} from "../api/fetchPopularData.tsx";
@@ -35,18 +35,25 @@ export default function HomeCards({clickedButton}:HomeCardsProps){
                     {dataToRender?.slice(0,10).map((i,index:number)=>(
                             <span key={i.id} style={{ "--i": index + 1 } as CSSProperties}>
                                 <Link to={i.type==="movie" ? `/movies/${i.id}/${i.title}` : `/series/${i.id}/${i.name}`}>
+                                    {i.poster_path ?
                                     <img
                                         style={{maxWidth:"200px"}}
                                         src={`https://image.tmdb.org/t/p/original${i.poster_path}`}
                                         alt={i.title || i.name}
                                         className={index === 0 ? "front" : ""}
                                     />
+                                        :
+                                        <Skeleton variant="rectangular" style={{ width: "100%", maxWidth:"200px",height: "auto", borderRadius: "8px",boxShadow: "3px 3px 3px black", }}/>
+
+                                    }
                                     <h3>{i.title || i.name}</h3>
+
                                 </Link>
                             </span>
                     ))}
                 </Box>
             </Box>
+
 
         </>
     )

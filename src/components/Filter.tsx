@@ -20,13 +20,12 @@ import {FilterProps, genreType} from "../types.tsx";
 import FilterListIcon from '@mui/icons-material/FilterList';
 let movie=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
 let tv=`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
-export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
-    const[sortBy,setSortBy]=useState<string>("popularity.desc")
-    const[releaseDate,setReleaseDate]=useState<string>()
-    const[category,setCategory]=useState<number[]>([])
+export default function Filter<T>({ setFilteredData,sortBy,setSortBy,setPage,releaseDate,setReleaseDate,category,setCategory,genres,setGenres }: FilterProps<T>) {
+
+
     const[clickedButton,setClickedButton]= useState<{ [ key:string]: boolean }>({})
     const[filtersApplied,setFiltersApplied]=useState<boolean>(false)
-    const [genres, setGenres] = useState([])
+
     const location=useLocation()
     const isMoviePage = location.pathname === '/movies'
     const isSeriesPage = location.pathname === '/series'
@@ -35,8 +34,6 @@ export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
     const handleMenuOpen = (event:React.MouseEvent<HTMLElement>) => {setAnchorEl(event.currentTarget)}
     const handleMenuClose = () => {
         setAnchorEl(null)}
-
-
 
     const handleSortChange=(e: SelectChangeEvent<string>)=>{
         setSortBy(e.target.value)
@@ -86,7 +83,9 @@ export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
         }
         console.log(movie)
         const response = await axios.get(movie);
-        setFilteredData(response.data.results);
+        if (setFilteredData) {
+            setFilteredData(response.data.results);
+        }
         return response.data.results;
     }
     const fetchFilterSeries=async ()=>{
@@ -101,33 +100,46 @@ export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
         }
         console.log(tv)
         const response = await axios.get(tv);
-        setFilteredData(response.data.results);
+        if (setFilteredData) {
+            setFilteredData(response.data.results);
+        }
         return response.data.results;
     }
 
-
-
-
-     useQuery({
+    const { refetch: refetchFilteredMovies } = useQuery({
         queryKey: ["filteredMovies"],
         queryFn: fetchFilteredMovies,
-        enabled: filtersApplied  && isMoviePage
+        enabled: filtersApplied  && isMoviePage,
+        refetchOnWindowFocus:false
     });
-     useQuery({
+    const { refetch: refetchFilteredSeries } = useQuery({
         queryKey: ["fetchFilterSeries"],
         queryFn: fetchFilterSeries,
-        enabled: filtersApplied && isSeriesPage
+        enabled: filtersApplied && isSeriesPage,
+        refetchOnWindowFocus:false
     });
      useQuery({
         queryKey: ["genres"],
         queryFn: fetchGenres,
+         refetchOnWindowFocus:false
 
     });
-    const applyFilters=(e: SyntheticEvent)=>{
-        e.preventDefault()
-        setFiltersApplied(true)
-    }
 
+
+    const applyFilters=async (e: SyntheticEvent)=>{
+        e.preventDefault()
+
+        if (isMoviePage) {
+            await refetchFilteredMovies();
+        } else if (isSeriesPage) {
+            await refetchFilteredSeries();
+        }
+        if (setPage) {
+            setPage(1)
+        }
+        setFiltersApplied(true)
+        handleMenuClose();
+    }
 
 
     return (

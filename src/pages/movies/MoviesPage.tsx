@@ -1,26 +1,22 @@
-import {useState} from "react";
-import {moviesType} from "../../types.tsx";
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    Pagination,
-    Stack,
-    Typography
-} from "@mui/material";
+import {ChangeEvent, useState} from "react";
+import {FilterProps, moviesType} from "../../types.tsx";
+import {Box, Pagination, Skeleton, Stack, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
-import CloseIcon from "@mui/icons-material/Close";
-import {Link} from "react-router";
+
 import Navbar from "../../components/Navbar.tsx";
 import {fetchMoviesPerPage} from "../../api/fetchMoviesPerPage.tsx";
 import Filter from "../../components/Filter.tsx";
 import {useQuery} from "@tanstack/react-query";
+import {fetchFilteredMoviesPerPage} from "../../api/fetchFilteredMoviesPerPage.tsx";
+import DialogMenu from "./DialogMenu.tsx";
 
-export default function MoviesPage() {
+export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
+                                          setReleaseDate,
+                                          category,
+                                          setCategory,
+                                          genres,
+                                          setGenres}:FilterProps<T>) {
     const[movies,setMovies]=useState<moviesType[]>([])
     const [totalPages, setTotalPages] = useState(1);
     const [page, setPage] = useState(1);
@@ -28,19 +24,29 @@ export default function MoviesPage() {
     const[clickedMovie,setClickedMovie]=useState<moviesType | undefined>()
     const [filteredData,setFilteredData]=useState<moviesType[]>([])
 
-
-    useQuery({ queryKey: ['movies'], queryFn: () => fetchMoviesPerPage(setMovies, page, setTotalPages) })
-
+    const {refetch}= useQuery({
+        queryKey: ['movies',page],
+        queryFn: () => fetchMoviesPerPage(setMovies, page, setTotalPages),
+        refetchOnWindowFocus:false
+    })
+    const{refetch:refetchFiltered}=useQuery({
+        queryKey: ['filteredMovies',page],
+        queryFn: () => fetchFilteredMoviesPerPage(page, setTotalPages,sortBy,setFilteredData),
+        refetchOnWindowFocus:false })
     const handleClickOpen = (id:number) => {
         const found=movies.find((movie)=>movie.id===id)
         setClickedMovie(found)
         setOpen(true);
     };
     const handleClose = () => {setOpen(false);};
-    const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    const handlePageChange = (_event: ChangeEvent<unknown>, value: number) => {
         setPage(value);
+        refetch()
+        refetchFiltered()
     };
 
+
+    console.log(category)
     return (
         <>
             <Navbar />
@@ -55,12 +61,13 @@ export default function MoviesPage() {
                 }}
             >
                 <Box sx={{ paddingRight: "10px" }}>
-                    <Filter setFilteredData={setFilteredData} />
+                    <Filter setFilteredData={setFilteredData} sortBy={sortBy} setSortBy={setSortBy} setPage={setPage} genres={genres}
+                            setReleaseDate={setReleaseDate} setCategory={setCategory} setGenres={setGenres} category={category}  releaseDate={releaseDate}/>
                 </Box>
 
                 <Grid container spacing={2} sx={{ alignItems: "center" }}>
-                    {filteredData && filteredData.length > 0
-                        ? filteredData.map((filtered) => (
+                    {filteredData && sortBy!="popularity.desc" || releaseDate!=undefined || category!=undefined || genres!=undefined  && filteredData.length > 0
+                        ? filteredData.map((filtered:moviesType) => (
                             <Grid key={filtered.id} size={{xs:12, sm:6, md:4, lg:2.4}}>
                                 <Box
                                     position="relative"
@@ -73,6 +80,7 @@ export default function MoviesPage() {
 
                                     }}
                                 >
+                                    {filtered.poster_path?
                                     <img
                                         alt={filtered.title}
                                         style={{ width: "100%", height: "auto", borderRadius: "8px",boxShadow: "3px 3px 3px black", }}
@@ -80,6 +88,9 @@ export default function MoviesPage() {
                                         onClick={() => handleClickOpen(filtered.id)}
                                         loading="eager"
                                     />
+                                        :
+                                        <Skeleton variant="rectangular" style={{ width: "100%", height: "auto", borderRadius: "8px",boxShadow: "3px 3px 3px black", }}/>
+                                    }
 
                                     <Box
                                         position="absolute"
@@ -98,7 +109,7 @@ export default function MoviesPage() {
                                 </Box>
                             </Grid>
                         ))
-                        : movies.map((movie) => (
+                        : movies.map((movie:moviesType) => (
                             <Grid key={movie.id} size={{xs:12, sm:6, md:4, lg:2.4}}>
                                 <Box
                                     position="relative"
@@ -110,13 +121,17 @@ export default function MoviesPage() {
                                         overflow: "hidden",
                                     }}
                                 >
-                                    <img
-                                        alt={movie.title}
-                                        style={{ width: "100%", height: "auto", borderRadius: "8px",boxShadow: "10px 5px 0px black"}}
-                                        src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-                                        onClick={() => handleClickOpen(movie.id)}
-                                        loading="eager"
-                                    />
+                                    {movie.poster_path?
+                                        <img
+                                            alt={movie.title}
+                                            style={{ width: "100%", height: "auto", borderRadius: "8px",boxShadow: "10px 5px 0px black"}}
+                                            src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                                            onClick={() => handleClickOpen(movie.id)}
+                                            loading="eager"
+                                        />
+                                            :
+                                        <Skeleton variant="rectangular" style={{ width: "100%", height: "auto", borderRadius: "8px",boxShadow: "3px 3px 3px black",border:'1px solid black' }}/>
+                                    }
 
                                     <Box
                                         position="absolute"
@@ -137,56 +152,11 @@ export default function MoviesPage() {
                         ))}
                 </Grid>
 
-                <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-                    <DialogTitle
-                        sx={{ m: 0, p: 2, textAlign: "center", fontWeight: "bold", color: "black" }}
-                        id={clickedMovie?.id?.toString()}
-                    >
-                        {clickedMovie ? clickedMovie.title : <Typography>N/A</Typography>}
-                    </DialogTitle>
-                    <IconButton
-                        aria-label="close"
-                        onClick={handleClose}
-                        sx={(theme) => ({
-                            position: "absolute",
-                            right: 8,
-                            top: 8,
-                            color: theme.palette.grey[500],
-                        })}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                    <DialogContent dividers sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, alignItems: "center" }}>
-                        <img
-                            alt={clickedMovie?.title}
-                            style={{
-                                width: "100%",
-                                maxWidth: "200px",
-                                height: "auto",
-                                borderRadius: "8px",
-                                margin: "0 auto",
-                                boxShadow: "3px 3px 3px black",
-                            }}
-                            src={`https://image.tmdb.org/t/p/original/${clickedMovie?.poster_path}`}
-                        />
-                        <Typography gutterBottom sx={{ color: "black", paddingLeft: { sm: "15px",md:'15px',lg:'15px' },paddingTop:{sm:"25px"}, fontSize: "18px", flex: 1 }}>
-                            {clickedMovie && clickedMovie.overview && clickedMovie.overview.length > 0
-                                ? clickedMovie.overview
-                                : "No description found!"}
-                        </Typography>
-                        <Box sx={{ textAlign: "center", width: "auto", marginTop: "16px" }}>
-                            <Link to={`/movies/${clickedMovie?.id}/${clickedMovie?.title}`}>
-                                <Button variant="contained" color="primary">
-                                    Watch Now
-                                </Button>
-                            </Link>
-                        </Box>
-                    </DialogContent>
-                </Dialog>
-            </Box>
+                <DialogMenu open={open} handleClose={handleClose} clickedMovie={clickedMovie}/>
 
+        </Box>
             <Stack spacing={2} sx={{ display: "flex", alignItems: "center", marginTop: "16px" }}>
-                <Pagination count={totalPages} page={page} onChange={handlePageChange} color="secondary" />
+                <Pagination count={Math.floor(totalPages/2)} page={page} onChange={handlePageChange} color="secondary" />
             </Stack>
         </>
     )

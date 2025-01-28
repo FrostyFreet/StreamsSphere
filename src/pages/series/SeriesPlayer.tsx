@@ -1,15 +1,15 @@
-import {Link, useParams} from "react-router";
+import { useParams} from "react-router";
 import {useEffect, useState} from "react";
 import {seriesDetailTypes, seriesType} from "../../types.tsx";
 import Navbar from "../../components/Navbar.tsx";
 import Box from "@mui/material/Box";
-import {Button, Dialog, DialogContent, DialogTitle, IconButton, Typography} from "@mui/material";
+import { Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
-import CloseIcon from "@mui/icons-material/Close";
 import {fetchRecommendedSeries} from "../../api/fetchRecommendedSeries.tsx";
 import {fetchSeriesDetail} from "../../api/fetchSeriesDetail.tsx";
 import '../../App.css'
+import DialogMenu from "../movies/DialogMenu.tsx";
 
 export default function SeriesPlayer(){
     const {id} = useParams();
@@ -62,42 +62,8 @@ export default function SeriesPlayer(){
                         </Grid>
                     ))}
                 </Grid>
-                <Dialog open={open} onClose={handleClose}>
-                    <DialogTitle sx={{ m: 0, p: 2,textAlign:"center",fontWeight:"bold",background: "linear-gradient(90deg, #0F2027, #2C5364)",color:'white' }} id={clickedSeries?.id?.toString()}>
-                        {clickedSeries?
-                            clickedSeries.name
-                            :
-                            <Typography>N/A</Typography>
-                        }
+                <DialogMenu open={open} handleClose={handleClose} clickedMovie={clickedSeries}/>
 
-                    </DialogTitle>
-                    <IconButton
-                        aria-label="close"
-                        onClick={handleClose}
-                        sx={(theme) => ({position: 'absolute', right: 8, top: 8, color: theme.palette.grey[500],})}>
-                        <CloseIcon />
-                    </IconButton>
-                    <DialogContent dividers sx={{display:'flex',alignItems:'center',background: "linear-gradient(90deg, #0F2027, #2C5364)"}}>
-                        <img alt={clickedSeries?.name} style={{width: "25%", height: "auto", borderRadius: "8px",marginLeft:'auto',marginRight:'auto'}}
-                             src={`https://image.tmdb.org/t/p/original/${clickedSeries?.poster_path}`}
-                        />
-                        <Typography gutterBottom sx={{color:'white',paddingLeft:'10px',fontSize:'18px',flex:1}}>
-                            {clickedSeries && clickedSeries.overview && clickedSeries.overview.length>0?
-                                clickedSeries.overview
-                                :
-                                <Typography>No description found!</Typography>
-                            }
-                        </Typography>
-                        <Box sx={{ textAlign: 'center', width: 'auto', marginTop: '16px' }}>
-                            <Link to={`/series/${clickedSeries?.id}/${clickedSeries?.name}`}>
-                                <Button variant="contained" color="primary">
-                                    Watch Now
-                                </Button>
-                            </Link>
-
-                        </Box>
-                    </DialogContent>
-                </Dialog>
             </Box>
         </>
     );
