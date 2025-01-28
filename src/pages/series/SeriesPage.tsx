@@ -36,7 +36,7 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
         refetch()
         refetchFiltered()
     };
-    console.log(clickedSeries)
+
 
     return (
         <>

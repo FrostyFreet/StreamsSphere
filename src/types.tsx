@@ -61,7 +61,14 @@ export interface FilterProps<T> {
     setCategory:Dispatch<React.SetStateAction<number[]>>
     genres:Genre[]
     setGenres:Dispatch<React.SetStateAction<Genre[]>>
-
     setPage?:Dispatch<React.SetStateAction<number>>
     setSortBy: Dispatch<React.SetStateAction<string>>
+}
+export interface episodeType{
+    id:number,
+    still_path:string,
+    name:string,
+    episode_number:number,
+    vote_average:number
+    runtime:number
 }
