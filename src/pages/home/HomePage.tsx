@@ -1,15 +1,14 @@
-import Navbar from "../../api/components/Navbar.tsx";
-import FeaturedMovie from "../movies/FeaturedMovie.tsx";
-import PopularSeries from "../series/PopularSeries.tsx";
-import PopularMovies from "../movies/PopularMovies.tsx";
+import Navbar from "../../components/Navbar.tsx";
+
+
+import Header from "../../components/Header.tsx";
 
 export default function HomePage(){
     return(
         <>
             <Navbar/>
-            <FeaturedMovie/>
-            <PopularSeries/>
-            <PopularMovies/>
+            <Header/>
+
         </>
 
     )

@@ -1,7 +1,7 @@
 import {Link, useParams} from "react-router";
 
 import Box from '@mui/material/Box';
-import Navbar from "../../api/components/Navbar.tsx";
+import Navbar from "../../components/Navbar.tsx";
 import {Button,Dialog, DialogContent, DialogTitle, IconButton, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {fetchRecommendedMovies} from "../../api/fetchRecommendedMovies.tsx";

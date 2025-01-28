@@ -1,7 +1,7 @@
 import {Link, useParams} from "react-router";
 import {useEffect, useState} from "react";
 import {seriesDetailTypes, seriesType} from "../../types.tsx";
-import Navbar from "../../api/components/Navbar.tsx";
+import Navbar from "../../components/Navbar.tsx";
 import Box from "@mui/material/Box";
 import {Button, Dialog, DialogContent, DialogTitle, IconButton, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";

@@ -1,25 +1,42 @@
-import {Box, Accordion, AccordionSummary, AccordionDetails, Typography, TextField, Button, Select, MenuItem, SelectChangeEvent,
+import {
+    Box,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Typography,
+    TextField,
+    Button,
+    Select,
+    MenuItem,
+    SelectChangeEvent,
+    useMediaQuery, IconButton, Menu,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {SyntheticEvent, useState} from "react";
+import React, {SyntheticEvent, useState} from "react";
 import {useQuery} from "@tanstack/react-query";
 import axios from "axios";
 import {useLocation} from "react-router";
-import {FilterProps, genreType} from "../../types.tsx";
-
+import {FilterProps, genreType} from "../types.tsx";
+import FilterListIcon from '@mui/icons-material/FilterList';
+let movie=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
+let tv=`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
 export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
     const[sortBy,setSortBy]=useState<string>("popularity.desc")
     const[releaseDate,setReleaseDate]=useState<string>()
     const[category,setCategory]=useState<number[]>([])
     const[clickedButton,setClickedButton]= useState<{ [ key:string]: boolean }>({})
     const[filtersApplied,setFiltersApplied]=useState<boolean>(false)
-    const [genres, setGenres] = useState([]);
+    const [genres, setGenres] = useState([])
     const location=useLocation()
     const isMoviePage = location.pathname === '/movies'
     const isSeriesPage = location.pathname === '/series'
+    const isMobile = useMediaQuery("(max-width:750px)")
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+    const handleMenuOpen = (event:React.MouseEvent<HTMLElement>) => {setAnchorEl(event.currentTarget)}
+    const handleMenuClose = () => {
+        setAnchorEl(null)}
 
-    let movie=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
-    let tv=`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
+
 
     const handleSortChange=(e: SelectChangeEvent<string>)=>{
         setSortBy(e.target.value)
@@ -91,17 +108,17 @@ export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
 
 
 
-    const movies = useQuery({
-        queryKey: ["filteredMovies", sortBy, releaseDate, category],
+     useQuery({
+        queryKey: ["filteredMovies"],
         queryFn: fetchFilteredMovies,
         enabled: filtersApplied  && isMoviePage
     });
-    const series = useQuery({
-        queryKey: ["fetchFilterSeries", sortBy, releaseDate, category],
+     useQuery({
+        queryKey: ["fetchFilterSeries"],
         queryFn: fetchFilterSeries,
         enabled: filtersApplied && isSeriesPage
     });
-    const genre = useQuery({
+     useQuery({
         queryKey: ["genres"],
         queryFn: fetchGenres,
 
@@ -115,15 +132,17 @@ export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
 
     return (
         <form onSubmit={applyFilters}>
+            {!isMobile?
             <Box
                 sx={{
-                    width: "300px",
-                    padding: "16px",
+                    display:"flex",
+                    flexDirection: "column",
+                    width:"300px",
+                    padding: "20px",
                     backgroundColor:'white',
                     borderRadius: "8px",
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                    overflowY: "auto",
-                    maxHeight: "90vh",
+                    boxShadow: "0 5px 25px rgba(0, 0, 0, 0.9)",
+
                 }}
             >
                 {/* Sort Section */}
@@ -141,7 +160,6 @@ export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
                     </AccordionDetails>
                 </Accordion>
 
-                {/* Premier Date Section */}
                 <Accordion >
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} >
                         <Typography variant="subtitle1">Release date:</Typography>
@@ -156,7 +174,7 @@ export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
                     </AccordionDetails>
                 </Accordion>
 
-                {/* Genres Section */}
+
                 <Accordion defaultExpanded>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography variant="subtitle1">Category</Typography>
@@ -178,11 +196,94 @@ export default function Filter<T>({ setFilteredData }: FilterProps<T>) {
                     color="primary"
                     fullWidth
                     sx={{ mt: 2 }}
-
                 >
                     Apply
                 </Button>
             </Box>
+                :
+                <Box>
+                    <IconButton onClick={handleMenuOpen}>
+                        <FilterListIcon id="burger-menu" />
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                    >
+                        {/* Sort Section */}
+                        <Accordion defaultExpanded>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography variant="subtitle1">Sort by:</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Select fullWidth value={sortBy} onChange={handleSortChange}>
+                                    <MenuItem value="popularity.desc">Rating Descending</MenuItem>
+                                    <MenuItem value="popularity.asc">Rating Ascending</MenuItem>
+                                    <MenuItem value="primary_release_date.desc">Release Date Descending</MenuItem>
+                                    <MenuItem value="primary_release_date.asc">Release Date Ascending</MenuItem>
+                                </Select>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        {/* Release Date Section */}
+                        <Accordion>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography variant="subtitle1">Release date:</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Typography variant="body2" gutterBottom>
+                                    Before:
+                                </Typography>
+                                <TextField
+                                    type="date"
+                                    fullWidth
+                                    variant="outlined"
+                                    size="small"
+                                    value={releaseDate}
+                                    onChange={handleReleaseChange}
+                                />
+                            </AccordionDetails>
+                        </Accordion>
+
+                        {/* Genres Section */}
+                        <Accordion defaultExpanded>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography variant="subtitle1">Category</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                                    {genres.map((genre: genreType) => (
+                                        <Button
+                                            key={genre.id}
+                                            variant={clickedButton[genre.name] ? "contained" : "outlined"}
+                                            onClick={() => handleClickButton(genre.name, genre.id)}
+                                            sx={{
+                                                borderRadius: "20px",
+                                                textTransform: "none",
+                                            }}
+                                        >
+                                            {genre.name}
+                                        </Button>
+                                    ))}
+                                </Box>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Button
+                            onClick={(e) => {
+                                applyFilters(e)
+                                handleMenuClose()
+                            }}
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            sx={{ mt: 2, mx: 2 }}
+                        >
+                            Apply
+                        </Button>
+                    </Menu>
+                </Box>
+            }
         </form>
     )
 }

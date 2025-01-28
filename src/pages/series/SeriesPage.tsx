@@ -1,14 +1,14 @@
 import {useEffect, useState} from "react";
 import {seriesType} from "../../types.tsx";
 
-import Navbar from "../../api/components/Navbar.tsx";
+import Navbar from "../../components/Navbar.tsx";
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Pagination, Skeleton, Stack, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 import CloseIcon from "@mui/icons-material/Close";
 import {Link} from "react-router";
 import {fetchSeriesPerPage} from "../../api/fetchSeriesPerPage.tsx";
-import Filter from "../../api/components/Filter.tsx";
+import Filter from "../../components/Filter.tsx";
 
 export default function SeriesPage() {
     const[series,setSeries]=useState<seriesType[]>([])
@@ -30,112 +30,155 @@ export default function SeriesPage() {
     const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
-    return(
+    return (
         <>
-            <Navbar/>
-            <Box sx={{display:'flex',justifyContent:'center',alignItems:'flex-start',background: "linear-gradient(90deg, #0F2027, #2C5364)", padding: "16px", textAlign: "center",}}>
-                <Box sx={{paddingRight:'10px'}}>
-                    <Filter setFilteredData={setFilteredData}/>
+            <Navbar />
+
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    padding: "16px",
+                    textAlign: "center",
+                }}
+            >
+                <Box sx={{ paddingRight: "10px" }}>
+                    <Filter setFilteredData={setFilteredData} />
                 </Box>
-                <Grid container spacing={1} sx={{justifyContent: "space-between", alignItems: "center",}}>
 
-                    {filteredData && filteredData.length>0 ?
-                        (
-                            filteredData.map((filtered)=>(
-                                <Grid size={{xs:6, sm:4, md:2.4}} key={filtered.id}>
-                                    <Box position="relative" sx={{width: "100%", maxWidth: "300px", height: "auto", borderRadius: "8px", overflow: "hidden",}}>
+                <Grid container spacing={2} sx={{ alignItems: "center" }}>
+                    {filteredData && filteredData.length > 0
+                        ? filteredData.map((filtered) => (
+                            <Grid key={filtered.id} size={{xs:12, sm:6, md:4, lg:2.4}}>
+                                <Box
+                                    position="relative"
+                                    sx={{
+                                        width: "100%",
+                                        maxWidth: "300px",
+                                        minWidth:"300px",
+                                        height: "auto",
+                                        borderRadius: "8px",
+                                        overflow: "hidden",
 
-                                        <img alt={filtered.title} style={{width: "100%", height: "auto", borderRadius: "8px",}}
-                                             src={`https://image.tmdb.org/t/p/original/${filtered.poster_path}`}
-                                             onClick={()=>handleClickOpen(filtered.id)} loading={"eager"}
-                                        />
+                                    }}
+                                >
+                                    <img
+                                        alt={filtered.title}
+                                        style={{ width: "100%", height: "auto", borderRadius: "8px",boxShadow: "3px 3px 3px black", }}
+                                        src={`https://image.tmdb.org/t/p/original/${filtered.poster_path}`}
+                                        onClick={() => handleClickOpen(filtered.id)}
+                                        loading="eager"
+                                    />
 
-                                        <Box position="absolute" top={8} left={8} bgcolor="rgba(0, 0, 0, 0.5)" color="white" borderRadius="4px" padding="4px 8px"
-                                             display="flex"
-                                             alignItems="center">
-                                            <StarIcon sx={{ fontSize: "1rem", marginRight: "4px",color:'gold' }} />
-                                            <Typography variant="body2">{filtered.vote_average.toFixed(1)}</Typography>
-                                        </Box>
-
+                                    <Box
+                                        position="absolute"
+                                        top={8}
+                                        left={8}
+                                        bgcolor="rgba(0, 0, 0, 0.5)"
+                                        color="white"
+                                        borderRadius="4px"
+                                        padding="4px 8px"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <StarIcon sx={{ fontSize: "1rem", marginRight: "4px", color: "gold" }} />
+                                        <Typography variant="body2">{filtered.vote_average.toFixed(1)}</Typography>
                                     </Box>
-                                </Grid>
+                                </Box>
+                            </Grid>
+                        ))
+                        : series.map((series) => (
+                            <Grid key={series.id} size={{xs:12, sm:6, md:4, lg:2.4}}>
+                                <Box
+                                    position="relative"
+                                    sx={{
+                                        width: "100%",
+                                        maxWidth: "300px",
+                                        minWidth:"300px",
+                                        height: "auto",
+                                        borderRadius: "8px",
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    <img
+                                        alt={series.title}
+                                        style={{ width: "100%", height: "auto", borderRadius: "8px",boxShadow: "10px 5px 0px black"}}
+                                        src={`https://image.tmdb.org/t/p/original/${series.poster_path}`}
+                                        onClick={() => handleClickOpen(series.id)}
+                                        loading="eager"
+                                    />
 
-
-                            ))
-                        ):(
-                            series.map((series) => (
-                                <Grid size={{xs:6, sm:4, md:2.4}} key={series.id}>
-                                    <Box position="relative" sx={{width: "100%", maxWidth: "300px", height: "auto", borderRadius: "8px", overflow: "hidden",}}>
-
-                                        <img alt={series.title} style={{width: "100%", height: "auto", borderRadius: "8px",}}
-                                             src={`https://image.tmdb.org/t/p/original/${series.poster_path}`}
-                                             onClick={()=>handleClickOpen(series.id)} loading={"eager"}
-                                        />
-
-                                        <Box position="absolute" top={8} left={8} bgcolor="rgba(0, 0, 0, 0.5)" color="white" borderRadius="4px" padding="4px 8px"
-                                             display="flex"
-                                             alignItems="center">
-                                            <StarIcon sx={{ fontSize: "1rem", marginRight: "4px",color:'gold' }} />
-                                            <Typography variant="body2">{series.vote_average.toFixed(1)}</Typography>
-                                        </Box>
-
+                                    <Box
+                                        position="absolute"
+                                        top={8}
+                                        left={8}
+                                        bgcolor="rgba(0, 0, 0, 0.5)"
+                                        color="white"
+                                        borderRadius="4px"
+                                        padding="4px 8px"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <StarIcon sx={{ fontSize: "1rem", marginRight: "4px", color: "gold" }} />
+                                        <Typography variant="body2">{series.vote_average.toFixed(1)}</Typography>
                                     </Box>
-                                </Grid>
-                    )))}
+                                </Box>
+                            </Grid>
+                        ))}
                 </Grid>
-                <Dialog open={open} onClose={handleClose}>
-                    <DialogTitle sx={{ m: 0, p: 2,textAlign:"center",fontWeight:"bold",background: "linear-gradient(90deg, #0F2027, #2C5364)",color:'white' }} id={clickedSeries?.id?.toString()}>
-                        {clickedSeries?
-                            clickedSeries.name
-                            :
-                            <Typography>N/A</Typography>
-                        }
 
+                <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+                    <DialogTitle
+                        sx={{ m: 0, p: 2, textAlign: "center", fontWeight: "bold", color: "black" }}
+                        id={clickedSeries?.id?.toString()}
+                    >
+                        {clickedSeries ? clickedSeries.name : <Typography>N/A</Typography>}
                     </DialogTitle>
                     <IconButton
                         aria-label="close"
                         onClick={handleClose}
-                        sx={(theme) => ({position: 'absolute', right: 8, top: 8, color: theme.palette.grey[500],})}>
+                        sx={(theme) => ({
+                            position: "absolute",
+                            right: 8,
+                            top: 8,
+                            color: theme.palette.grey[500],
+                        })}
+                    >
                         <CloseIcon />
                     </IconButton>
-                    <DialogContent dividers sx={{display:'flex',alignItems:'center',background: "linear-gradient(90deg, #0F2027, #2C5364)"}}>
-                        {clickedSeries?.poster_path && clickedSeries?.poster_path.length > 0 ?
-                            <img alt={clickedSeries?.name} style={{width: "25%", height: "auto", borderRadius: "8px", marginLeft: 'auto', marginRight: 'auto'}}
-                                 src={`https://image.tmdb.org/t/p/original/${clickedSeries?.poster_path}`}
-                                 loading={"eager"}
-                            />
-                            :
-                            <Skeleton variant="rectangular" width={"25%"} height={"auto"}></Skeleton>
-                        }
-
-                        <Typography gutterBottom sx={{color: 'white', paddingLeft: '10px', fontSize: '18px', flex: 1}}>
-                            {clickedSeries && clickedSeries.overview && clickedSeries.overview.length > 0 ? (
-                                clickedSeries.overview
-                            ) : (
-                                <Typography>No description found!</Typography>
-                            )}
+                    <DialogContent dividers sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, alignItems: "center" }}>
+                        <img
+                            alt={clickedSeries?.name}
+                            style={{
+                                width: "100%",
+                                maxWidth: "200px",
+                                height: "auto",
+                                borderRadius: "8px",
+                                margin: "0 auto",
+                                boxShadow: "3px 3px 3px black",
+                            }}
+                            src={`https://image.tmdb.org/t/p/original/${clickedSeries?.poster_path}`}
+                        />
+                        <Typography gutterBottom sx={{ color: "black", paddingLeft: { sm: "15px",md:'15px',lg:'15px' },paddingTop:{sm:"25px"}, fontSize: "18px", flex: 1 }}>
+                            {clickedSeries && clickedSeries.overview && clickedSeries.overview.length > 0
+                                ? clickedSeries.overview
+                                : "No description found!"}
                         </Typography>
-                        <Box sx={{ textAlign: 'center', width: 'auto', marginTop: '16px' }}>
+                        <Box sx={{ textAlign: "center", width: "auto", marginTop: "16px" }}>
                             <Link to={`/series/${clickedSeries?.id}/${clickedSeries?.name}`}>
                                 <Button variant="contained" color="primary">
                                     Watch Now
                                 </Button>
                             </Link>
-
                         </Box>
                     </DialogContent>
                 </Dialog>
-
             </Box>
-            <Stack spacing={2} style={{display:'flex',alignItems:'center'}}>
-                <Pagination
-                    count={Math.floor(totalPages/20)}
-                    page={page}
-                    onChange={handlePageChange}
-                    color="secondary"
-                />
-            </Stack>
 
+            <Stack spacing={2} sx={{ display: "flex", alignItems: "center", marginTop: "16px" }}>
+                <Pagination count={totalPages} page={page} onChange={handlePageChange} color="secondary" />
+            </Stack>
         </>
     )
 }

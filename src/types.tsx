@@ -14,7 +14,9 @@ export interface moviesType{
     backdrop_path:string ,
     overview:string
 }
-
+export interface HomeCardsProps {
+    clickedButton: string;
+}
 export interface featuredMovie{
     title:string ,
     id:number,
