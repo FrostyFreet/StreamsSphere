@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {moviesType} from "../../types.tsx";
 import {
     Box,
@@ -29,7 +29,7 @@ export default function MoviesPage() {
     const [filteredData,setFilteredData]=useState<moviesType[]>([])
 
 
-    const query = useQuery({ queryKey: ['movies'], queryFn: () => fetchMoviesPerPage(setMovies, page, setTotalPages) })
+    useQuery({ queryKey: ['movies'], queryFn: () => fetchMoviesPerPage(setMovies, page, setTotalPages) })
 
     const handleClickOpen = (id:number) => {
         const found=movies.find((movie)=>movie.id===id)

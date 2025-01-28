@@ -1,21 +1,21 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {seriesType} from "../../types.tsx";
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Skeleton, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 import CloseIcon from "@mui/icons-material/Close";
-import {fetchHomePageSeries} from "../../api/fetchHomePageSeries.tsx";
 import {Link} from "react-router";
+import {useQuery} from "@tanstack/react-query";
+import {fetchHomePageSeries} from "../../api/fetchHomePageSeries.tsx";
 
 export default function PopularSeries(){
     const[popularSeries,setPopularSeries]=useState<seriesType[]>([])
     const [open, setOpen] = useState(false);
     const[clickedSeries,setClickedSeries]=useState<seriesType>()
 
-    useEffect(() => {
-       fetchHomePageSeries(setPopularSeries)
-    }, []);
-    console.log(popularSeries)
+
+
+    useQuery({ queryKey: ['HomePageSeries'], queryFn: () => fetchHomePageSeries(setPopularSeries) })
 
     const handleClickOpen = (id:number) => {
         const found=popularSeries.find((series:seriesType)=>series.id===id)

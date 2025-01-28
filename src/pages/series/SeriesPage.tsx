@@ -1,8 +1,7 @@
 import {useEffect, useState} from "react";
 import {seriesType} from "../../types.tsx";
-
 import Navbar from "../../components/Navbar.tsx";
-import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Pagination, Skeleton, Stack, Typography} from "@mui/material";
+import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Pagination,Stack, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 import CloseIcon from "@mui/icons-material/Close";
