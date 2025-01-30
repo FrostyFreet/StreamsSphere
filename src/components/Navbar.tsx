@@ -93,7 +93,7 @@ export default function Navbar() {
                                 <GridViewIcon id={"burger-menu"}/>
                             </IconButton>
                             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                                <Link to={"/"} style={{color:'black',textDecoration:"none"}}>
+                                <Link to={"/home"} style={{color:'black',textDecoration:"none"}}>
                                     <MenuItem onClick={handleMenuClose} id={"home"} className={`mobile-menu-item ${home ? 'underlined' : ''}`}>Home</MenuItem>
                                 </Link>
                                 <Link to={"/movies"} style={{color:'black',textDecoration:"none"}}>
