@@ -36,7 +36,7 @@ function App() {
 
         <Routes>
             <Route path="/" element={user ? <MainPage />  : <HomePage/> } />
-            <Route element={<ProtectedRoute user={!user} />}>
+            <Route element={<ProtectedRoute user={user} />}>
                 <Route path="/home" element={<HomePage />}/>
                 <Route path="/movies" element={<MoviesPage sortBy={sortBy} setSortBy={setSortBy} releaseDate={releaseDate}
                                                            setReleaseDate={setReleaseDate} category={category} setCategory={setCategory} genres={genres} setGenres={setGenres} />}/>
