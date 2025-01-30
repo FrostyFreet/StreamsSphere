@@ -55,7 +55,7 @@ export default function Navbar() {
         queryKey: ['users'],
         queryFn: fetchUser
     })
-    console.log(user)
+
 
     return(
         <>

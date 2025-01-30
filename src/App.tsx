@@ -1,5 +1,5 @@
 import './App.scss'
-import { Route, Routes} from "react-router";
+import {Navigate, Route, Routes} from "react-router";
 import HomePage from "./pages/home/HomePage.tsx";
 import MoviesPage from "./pages/movies/MoviesPage.tsx";
 import SeriesPage from "./pages/series/SeriesPage.tsx";
@@ -14,6 +14,8 @@ import ProtectedRoute from "./pages/auth/ProtectedRoute.tsx";
 import {useQuery} from "@tanstack/react-query";
 import Watchlist from "./pages/bookmarked/Watchlist.tsx";
 import ChangePassword from "./pages/auth/ChangePassword.tsx";
+import {fetchSession} from "./api/fetchSession.tsx";
+
 
 function App() {
     const[sortBy,setSortBy]=useState<string>("popularity.desc")
@@ -21,21 +23,26 @@ function App() {
     const[category,setCategory]=useState<number[]>([])
     const [genres, setGenres] = useState<Genre[]>([])
 
-    const {data:user,isLoading } = useQuery({
+
+    const {data:user } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUser,
     });
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
 
-    console.log(user)
+    const {data:session}=useQuery({
+        queryKey: ['session'],
+        queryFn:fetchSession,
+    });
+
+
+    console.log("session:"+session)
+    console.log("user"+user)
 
 
     return (
 
         <Routes>
-            <Route path="/" element={user ? <MainPage />  : <HomePage/> } />
+            <Route path="/" element={session===null || session===undefined  ? <MainPage />  : <Navigate to="/home" /> } />
             <Route element={<ProtectedRoute user={user} />}>
                 <Route path="/home" element={<HomePage />}/>
                 <Route path="/movies" element={<MoviesPage sortBy={sortBy} setSortBy={setSortBy} releaseDate={releaseDate}
