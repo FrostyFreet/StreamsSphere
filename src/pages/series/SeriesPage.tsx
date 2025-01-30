@@ -1,25 +1,26 @@
 import { useState} from "react";
 import {FilterProps, seriesType} from "../../types.tsx";
 import Navbar from "../../components/Navbar.tsx";
-import {Box, Pagination,Stack, Typography} from "@mui/material";
+import {Box, IconButton, Pagination, Stack, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
-
 import {fetchSeriesPerPage} from "../../api/fetchSeriesPerPage.tsx";
 import Filter from "../../components/Filter.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {fetchFilteredSeriesPerPage} from "../../api/fetchFilteredSeriesPerPage.tsx";
 import SeriesDialogMenu from "./SeriesDialogMenu.tsx";
+import BookmarksIcon from "@mui/icons-material/Bookmarks";
+import {fetchUser} from "../../api/fetchUser.tsx";
+import {addToWatchList} from "../../api/addToWatchList.tsx";
+import {Navigate} from "react-router";
 
 export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDate,category,setCategory,genres,setGenres}:FilterProps<T>) {
     const[series,setSeries]=useState<seriesType[]>([])
-
     const [totalPages, setTotalPages] = useState(1);
     const [page, setPage] = useState(1);
     const [open, setOpen] = useState(false);
     const[clickedSeries,setClickedSeries]=useState<seriesType>()
     const [filteredData,setFilteredData]=useState<seriesType[]>([])
-
 
     const{refetch}=useQuery({ queryKey: ['seriesData',page], queryFn: () => fetchSeriesPerPage(setSeries,page,setTotalPages),refetchOnWindowFocus:false })
     const{refetch:refetchFiltered}=useQuery({ queryKey: ['filteredSeriesData'], queryFn: () => fetchFilteredSeriesPerPage(page, setTotalPages,sortBy,setFilteredData), refetchOnWindowFocus:false })
@@ -36,7 +37,19 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
         refetch()
         refetchFiltered()
     };
+    const{data:user}=useQuery({
+        queryKey: ['users'],
+        queryFn: () => fetchUser()
+    })
 
+    const addSeriesToWatchList=(id:number,title:string)=>{
+        {user ?
+            addToWatchList({ movie_id: id, title,type: "tvShow"})
+            :
+            <Navigate to={"/"}/>
+        }
+    }
+    console.log("Sortby:"+sortBy," ReleaseDate:"+releaseDate," Category"+category)
 
     return (
         <>
@@ -57,7 +70,7 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
                 </Box>
 
                 <Grid container spacing={2} sx={{ alignItems: "center" }}>
-                    {filteredData && sortBy!="popularity.desc" || releaseDate!=undefined || category!=undefined || genres!=undefined  && filteredData.length > 0
+                    {sortBy!="popularity.desc" || releaseDate!=undefined || category.length>0
                         ? filteredData.map((filtered) => (
                             <Grid key={filtered.id} size={{xs:12, sm:6, md:4, lg:2.4}}>
                                 <Box
@@ -92,6 +105,21 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
                                     >
                                         <StarIcon sx={{ fontSize: "1rem", marginRight: "4px", color: "gold" }} />
                                         <Typography variant="body2">{filtered.vote_average.toFixed(1)}</Typography>
+                                    </Box>
+                                    <Box
+                                        position="absolute"
+                                        top={8}
+                                        right={8}
+
+                                        color="white"
+                                        borderRadius="4px"
+                                        padding="1px 1px"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <IconButton onClick={()=>addSeriesToWatchList(filtered.id,filtered.name!)}>
+                                            <BookmarksIcon sx={{ fontSize: "1rem", marginRight: "4px", color:'white' }} />
+                                        </IconButton>
                                     </Box>
                                 </Box>
                             </Grid>
@@ -130,6 +158,21 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
                                     >
                                         <StarIcon sx={{ fontSize: "1rem", marginRight: "4px", color: "gold" }} />
                                         <Typography variant="body2">{series.vote_average.toFixed(1)}</Typography>
+                                    </Box>
+                                    <Box
+                                        position="absolute"
+                                        top={8}
+                                        right={8}
+
+                                        color="white"
+                                        borderRadius="4px"
+                                        padding="1px 1px"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <IconButton onClick={()=>addSeriesToWatchList(series.id,series.name!)}>
+                                            <BookmarksIcon sx={{ fontSize: "1rem", marginRight: "4px", color:'white' }} />
+                                        </IconButton>
                                     </Box>
                                 </Box>
                             </Grid>

@@ -15,7 +15,7 @@ export default function Navbar() {
     const[searchParam,setSearchParam]=useState< React.SetStateAction<string>>("")
     const[searchResult,setSearchResult]=useState<searchResultTypes[]>([])
     const location=useLocation()
-    const home=location.pathname==="/"
+    const home=location.pathname==="/home"
     const series=location.pathname==="/series"
     const movies=location.pathname==="/movies"
     const watchlist=location.pathname==="/watchlist"
@@ -45,7 +45,7 @@ export default function Navbar() {
                 {!isMobile ? (
                     <Box id={"nav_links"}>
                         <Typography id={"logo"} sx={{textDecoration:'none',color:'black'}}>S</Typography>
-                        <Link to={"/"} style={{ color: 'black', textDecoration: 'none' }}>
+                        <Link to={"/home"} style={{ color: 'black', textDecoration: 'none' }}>
                             <Typography id={"home"} className={`nav-link-text ${home ? 'underlined' : ''}`}>
                                 Home
                             </Typography>

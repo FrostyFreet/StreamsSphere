@@ -1,12 +1,12 @@
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Typography} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {Link} from "react-router";
-import { seriesType} from "../../types.tsx";
+import {bookmarkedType, seriesType} from "../../types.tsx";
 
 interface DialogMenuProps {
     open: boolean;
     handleClose: () => void;
-    clickedSeries: seriesType | undefined;
+    clickedSeries: seriesType | bookmarkedType | undefined;
 }
 
 export default function SeriesDialogMenu({open,handleClose,clickedSeries}:DialogMenuProps){

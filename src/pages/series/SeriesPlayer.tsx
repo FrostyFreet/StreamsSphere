@@ -7,7 +7,7 @@ import {MenuItem, Select, SelectChangeEvent, Skeleton, Typography} from "@mui/ma
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 
-import '../../App.css'
+import '../../App.scss'
 
 
 import axios from "axios";
@@ -49,8 +49,11 @@ export default function SeriesPlayer(){
         <>
             <Navbar/>
             <Box style={{display:'flex', justifyContent:'center',paddingBottom:'50px',height:'50vh',paddingTop:'35px'}}>
-                <iframe src={`https://vidsrc.cc/v2/embed/tv/${id}/${selectedSeason}/${selectedEpisode}?autoPlay=false`}
-                        className={'responsive-iframe'} allowFullScreen={true}>
+                <iframe src={`https://vidlink.pro/tv/${id}/${selectedSeason}/${selectedEpisode}?poster=true&autoPlay=false&player=jw&primaryColor=f5f5f5&secondaryColor=f5f5f5`}
+                        width={'1000px'}
+                         allowFullScreen={true}
+
+                >
                 </iframe>
             </Box>
             <Box display={"flex"} gap={"10px"}>

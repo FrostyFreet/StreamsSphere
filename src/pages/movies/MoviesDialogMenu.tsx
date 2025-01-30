@@ -1,12 +1,12 @@
 import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Typography} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {Link} from "react-router";
-import {moviesType} from "../../types.tsx";
+import {bookmarkedType, moviesType} from "../../types.tsx";
 
 interface DialogMenuProps {
     open: boolean;
     handleClose: () => void;
-    clickedMovie: moviesType | undefined ;
+    clickedMovie: moviesType | bookmarkedType | undefined  ;
 }
 
 export default function MoviesDialogMenu({open,handleClose,clickedMovie}:DialogMenuProps){

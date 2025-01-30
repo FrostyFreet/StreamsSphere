@@ -1,0 +1,286 @@
+body{
+    background-color: white;
+    color:black;
+    font-family: "Roboto", Inter, sans-serif;
+}
+
+.clicked {
+    color: black;
+    background-color: transparent;
+    transition: all 0.3s ease;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.clicked::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: red;
+    transform: scaleX(1);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#header{
+    display: flex;
+    gap: 15px;
+    color: black;
+    background-color: white;
+    margin-left:15px;
+}
+#header #logo{
+    margin-left: 10px;
+    font-size: 36px;
+    font-weight: bold;
+    text-shadow: #8F00FD 1px 0 15px;
+}
+#home,#movies,#tv_shows,#watchlist,#search{
+    padding-top:15px;
+    font-size:18px;
+}
+#home:hover,#movies:hover,#tv_shows:hover,#watchlist:hover,#search:hover{
+    text-decoration: underline;
+    text-shadow: #8F00FD 1px 0 15px;
+}
+
+#nav_links{
+    display:flex;
+    gap:40px;
+
+    text-shadow: 0.1px 0.10px #8F00FD;
+}
+
+#icons{
+    display:flex;
+    margin-left:auto;
+    gap:15px;
+}
+#avatar{
+    margin-top:15px;
+    margin-right:15px;
+}
+#burger-menu{
+    margin-top:10px;
+}
+
+#bent-text{
+    display: inline-block;
+    clip-path: circle(50% at 50% 50%);
+}
+#head-title{
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    margin-bottom:25px;
+    text-align: center;
+    font-weight: bolder;
+    letter-spacing: 1px;
+}
+#button-container{
+    display: flex;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    align-items:center;
+    align-content: center;
+    width:fit-content;
+    margin: 0 auto;
+    padding: 10px;
+    margin-bottom: 10px;
+
+
+}
+#button-container #top-rated,#popular,#latest,#recommended{
+    color:black;
+    text-decoration: none;
+    gap:50px;
+    font-weight: 500;
+}
+#button-container #top-rated:hover,#popular:hover,#latest:hover,#recommended:hover{
+    color:white;
+    background: #8F00FD;
+}
+
+.nav-link-text {
+    color: black;
+    text-decoration: none;
+    position: relative;
+
+}
+
+.nav-link-text.underlined::after {
+    content: '▲';
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: black;
+}
+
+.mobile-menu-item.underlined::after {
+    content: '◄'; /* Unicode arrow character for upward arrow */
+    position: absolute;
+    right: 1px; /* Position the arrow on the right side */
+    top: 60%; /* Center vertically */
+    transform: translateY(-50%); /* Center vertically */
+    font-size: 12px;
+    color: black;
+}
+.animation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 150px;
+    background: white;
+}
+.box {
+    transform: translate3d(0, 0, 0);
+    position: relative;
+    width: 250px;
+    height: 250px;
+    transform-style: preserve-3d;
+    animation: animate 40s linear infinite;
+    will-change: transform;
+}
+
+.box span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+    transform-style: preserve-3d;
+    transform: rotateY(calc(var(--i) * 45deg)) translateZ(300px); /* Adjust translateZ as needed */
+}
+
+.box span::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+    opacity: 0.5;
+    transform: scaleY(-1);
+}
+
+.box:hover{
+    animation-play-state: paused;
+}
+@media (max-width: 768px) {
+    .box {
+        animation-duration: 60s;
+    }
+}
+
+
+.box span img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: fit-content;
+    height: 100%;
+    border: 2px solid white;
+    border-radius: 18px;
+    object-fit: contain;
+}
+
+
+.box span h3 {
+    position: absolute;
+    top: 100%;
+    left: 35%;
+    transform: translate(-50%,-50%);
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+@keyframes animate {
+    0% {
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    100% {
+        transform: perspective(1000px) rotateY(360deg);
+    }
+}
+
+
+/*Main Page Loading Animation*/
+@function makelongshadow($length,$angle) {
+    $val: 0px 0px transparent;
+    @for $i from 1 through $length {
+        $val: #{$val}, #{$i}px #{$i*$angle}px #aaa;
+    }
+    @return $val;
+}
+
+
+#logo-animation {
+    text-align: center;
+    font-family: 'Roboto';
+    font-size: 12vmin;
+    font-weight: 700;
+    animation: netflix_style 3.5s forwards;
+    outline: none;
+    white-space: nowrap;
+}
+#login-form{
+    opacity:0;
+    animation: login-form 0.5s ease-in-out forwards;
+    animation-delay: 3.5s;
+}
+@keyframes login-form {
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes netflix_style  {
+    0% {
+        text-shadow: makelongshadow(100,1);
+        color:#f3f3f3;
+        transform: scale(1.5, 1.5);
+    }
+    10% {
+        text-shadow: makelongshadow(100,1.5);
+        color:#f3f3f3;
+        transform: scale(1.5, 1.5);
+    }
+    15% {
+        color:#f3f3f3;
+    }
+    20% {
+        color:#8F00FD;
+        transform: scale(1.1, 1.1);
+    }
+    75% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 0;
+        color:#8F00FD;
+        transform: scale(0.85, 0.9);
+    }
+
+    100% {
+        opacity: 1;
+        color:#8F00FD;
+        transform: scale(1, 1);    }
+}

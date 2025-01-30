@@ -1,15 +1,18 @@
 import {ChangeEvent, useState} from "react";
 import {FilterProps, moviesType} from "../../types.tsx";
-import {Box, Pagination, Skeleton, Stack, Typography} from "@mui/material";
+import {Box, IconButton, Pagination, Skeleton, Stack, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
-
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import Navbar from "../../components/Navbar.tsx";
 import {fetchMoviesPerPage} from "../../api/fetchMoviesPerPage.tsx";
 import Filter from "../../components/Filter.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {fetchFilteredMoviesPerPage} from "../../api/fetchFilteredMoviesPerPage.tsx";
 import MoviesDialogMenu from "./MoviesDialogMenu.tsx";
+import {fetchUser} from "../../api/fetchUser.tsx";
+import {Navigate} from "react-router";
+import {addToWatchList} from "../../api/addToWatchList.tsx";
 
 export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                                           setReleaseDate,
@@ -45,13 +48,23 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
         refetchFiltered()
     };
 
+    const{data:user}=useQuery({
+        queryKey: ['users'],
+        queryFn: () => fetchUser()
+    })
 
-
+    const addMovieToWatchList=(id:number,title:string)=>{
+        {user ?
+            addToWatchList({ movie_id: id, title,type: "movie" })
+            :
+            <Navigate to={"/"}/>
+        }
+    }
     console.log(category)
+
     return (
         <>
             <Navbar />
-
             <Box
                 sx={{
                     display: "flex",
@@ -67,7 +80,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                 </Box>
 
                 <Grid container spacing={2} sx={{ alignItems: "center" }}>
-                    {filteredData && sortBy!="popularity.desc" || releaseDate!=undefined || category!=undefined || genres!=undefined  && filteredData.length > 0
+                    {filteredData && sortBy!="popularity.desc" || releaseDate!=undefined || category!=undefined || genres!=undefined
                         ? filteredData.map((filtered:moviesType) => (
                             <Grid key={filtered.id} size={{xs:12, sm:6, md:4, lg:2.4}}>
                                 <Box
@@ -97,7 +110,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                                         position="absolute"
                                         top={8}
                                         left={8}
-                                        bgcolor="rgba(0, 0, 0, 0.5)"
+                                        bgcolor="rgba(0, 0, 0, 0.3)"
                                         color="white"
                                         borderRadius="4px"
                                         padding="4px 8px"
@@ -107,6 +120,24 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                                         <StarIcon sx={{ fontSize: "1rem", marginRight: "4px", color: "gold" }} />
                                         <Typography variant="body2">{filtered.vote_average.toFixed(1)}</Typography>
                                     </Box>
+
+                                    <Box
+                                        position="absolute"
+                                        top={8}
+                                        right={8}
+
+                                        color="white"
+                                        borderRadius="4px"
+                                        padding="1px 1px"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <IconButton onClick={()=>addMovieToWatchList(filtered.id,filtered.title)}>
+                                            <BookmarksIcon sx={{ fontSize: "1rem", marginRight: "4px", color:'white' }} />
+                                        </IconButton>
+                                    </Box>
+
+
                                 </Box>
                             </Grid>
                         ))
@@ -147,6 +178,21 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                                     >
                                         <StarIcon sx={{ fontSize: "1rem", marginRight: "4px", color: "gold" }} />
                                         <Typography variant="body2">{movie.vote_average.toFixed(1)}</Typography>
+                                    </Box>
+                                    <Box
+                                        position="absolute"
+                                        top={8}
+                                        right={8}
+
+                                        color="white"
+                                        borderRadius="4px"
+                                        padding="1px 1px"
+                                        display="flex"
+                                        alignItems="center"
+                                    >
+                                        <IconButton onClick={()=>addMovieToWatchList(movie.id,movie.title)}>
+                                            <BookmarksIcon sx={{ fontSize: "1rem", marginRight: "4px", color:'white' }} />
+                                        </IconButton>
                                     </Box>
                                 </Box>
                             </Grid>

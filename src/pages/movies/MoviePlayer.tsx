@@ -7,7 +7,7 @@ import {fetchRecommendedMovies} from "../../api/fetchRecommendedMovies.tsx";
 import {moviesType} from "../../types.tsx";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
-import '../../App.css'
+import '../../App.scss'
 import Iframe from 'react-iframe'
 import MoviesDialogMenu from "./MoviesDialogMenu.tsx";
 
@@ -35,7 +35,7 @@ export default function MoviePlayer(){
             <Navbar/>
             <Box style={{display:'flex', justifyContent:'center',paddingBottom:'50px',height:'50vh'}}>
                 <Iframe
-                    url={`https://vidsrc.cc/v2/embed/movie/${id}?autoPlay=false`}
+                    url={`https://vidlink.pro/movie/${id}`}
                     width={'1000px'}
                     allowFullScreen={true}
                     loading={'eager'}
