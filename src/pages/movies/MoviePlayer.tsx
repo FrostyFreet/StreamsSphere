@@ -35,7 +35,7 @@ export default function MoviePlayer(){
             <Navbar/>
             <Box style={{display:'flex', justifyContent:'center',paddingBottom:'50px',height:'50vh'}}>
                 <Iframe
-                    url={`https://vidlink.pro/movie/${id}`}
+                    url={`https://vidlink.pro/movie/${id}?poster=true&autoPlay=true&primaryColor=f5f5f5&secondaryColor=f5f5f5\``}
                     width={'1000px'}
                     allowFullScreen={true}
                     loading={'eager'}

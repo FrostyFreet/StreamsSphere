@@ -49,7 +49,8 @@ export default function SeriesPlayer(){
         <>
             <Navbar/>
             <Box style={{display:'flex', justifyContent:'center',paddingBottom:'50px',height:'50vh',paddingTop:'35px'}}>
-                <iframe src={`https://vidlink.pro/tv/${id}/${selectedSeason}/${selectedEpisode}?poster=true&autoPlay=false&player=jw&primaryColor=f5f5f5&secondaryColor=f5f5f5`}
+                <iframe
+                    src={`https://vidlink.pro/tv/${id}/${selectedSeason}/${selectedEpisode}?poster=true&autoPlay=false&primaryColor=f5f5f5&secondaryColor=f5f5f5`}
                         width={'1000px'}
                          allowFullScreen={true}
 
