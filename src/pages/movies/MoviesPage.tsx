@@ -54,13 +54,14 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
     })
 
     const addMovieToWatchList=(id:number,title:string)=>{
-        {user ?
-            addToWatchList({ movie_id: id, title,type: "movie" })
-            :
+        if(user) {
+            addToWatchList({movie_id: id, title, type: "movie", user_id: user.user?.id})
+        }
+        else{
             <Navigate to={"/"}/>
         }
     }
-    console.log(category)
+    console.log(user)
 
     return (
         <>

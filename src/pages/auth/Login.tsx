@@ -1,28 +1,37 @@
 import {Box, Button, FormControl, FormGroup, FormHelperText, Input, InputLabel, Typography} from "@mui/material";
-import {ChangeEvent, FormEvent, useState} from "react";
+import {ChangeEvent, useState} from "react";
 import {supabase} from "../../api/supabaseClient.tsx";
 import {useNavigate} from "react-router";
+import {SubmitHandler, useForm} from "react-hook-form";
 
 
+interface loginType{
+    email:string,
+    password:string
+}
 export default function Login(){
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [errorOccurred, setErrorOccurred] = useState<string | null>(null);
     const navigate=useNavigate()
-
-    const handleLogin=async(e:FormEvent)=>{
-        e.preventDefault()
+    const { register, handleSubmit,formState: { errors } } = useForm<loginType>();
+    const onSubmit: SubmitHandler<loginType> =async()=>{
         const {data, error} = await supabase.auth.signInWithPassword({
             email: email,
             password: password
         })
         if(error){
             console.error("Error occured while logging in:",error)
-        }
-        if(data){
-            console.log(data)
+            setErrorOccurred(error.message);        }
+        else if(data && data.user){
+            console.log('User logged in:', data.user);
             setEmail("")
             setPassword("")
             navigate("/home")
+        }
+        else {
+            console.error('Invalid login credentials');
+            setErrorOccurred('Invalid login credentials');
         }
 
     }
@@ -47,19 +56,39 @@ export default function Login(){
                 <Typography variant="h5" component="h2" gutterBottom>
                     Login
                 </Typography>
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <FormGroup>
                         <FormControl margin="normal" fullWidth>
                             <InputLabel htmlFor="email">Email address</InputLabel>
-                            <Input id="email" aria-describedby="email-helper-text" type="text" value={email}
+                            <Input
+                                {...register("email", {
+                                    required: "Email is required",
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                        message: "Invalid email address"
+                                    }
+                                })}
+                                id="email" aria-describedby="email-helper-text" type="text" value={email}
+
                                    onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setEmail(e.target.value)}/>
-                            <FormHelperText id="email-helper-text">We'll never share your email.</FormHelperText>
+                            {errors.email ? <FormHelperText error>{errors.email.message}</FormHelperText> :<FormHelperText>We'll never share your email.</FormHelperText>}
                         </FormControl>
 
                         <FormControl margin="normal" fullWidth>
                             <InputLabel htmlFor="password">Password</InputLabel>
                             <Input id="password" type="password" value={password}
+                                   {...register("password", {
+                                       required: "Password is required",
+                                       minLength: {
+                                           value: 8,
+                                           message: "Password must be at least 8 characters long"
+                                       }
+                                   })}
                                    onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setPassword(e.target.value)}/>
+                            <FormHelperText error>
+                                {errors?.password?.message || errorOccurred}
+                            </FormHelperText>
+
                         </FormControl>
 
                         <Button variant="contained" color="primary" type={"submit"} fullWidth

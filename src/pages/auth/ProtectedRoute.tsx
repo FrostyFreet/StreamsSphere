@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
 
-const ProtectedRoute = (user:any) => {
+const ProtectedRoute = ({ user }: { user: any }) => {
     if (!user) {
         return <Navigate to="/" />;
     }

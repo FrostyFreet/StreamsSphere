@@ -1,5 +1,5 @@
 import React, {Dispatch} from "react";
-import {User} from "@supabase/supabase-js";
+
 
 export interface seriesType {
     title: string  | undefined,
@@ -77,11 +77,11 @@ export interface bookmarkedType{
     vote_average?:number
     backdrop_path?: string,
     overview?: string
+    user_id?:string
 }
 
 export interface userType {
     id: string,
     email: string,
     role: string,
-    user?: { user: User } | { user: null } | undefined
 }

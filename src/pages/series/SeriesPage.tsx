@@ -43,9 +43,10 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
     })
 
     const addSeriesToWatchList=(id:number,title:string)=>{
-        {user ?
-            addToWatchList({ movie_id: id, title,type: "tvShow"})
-            :
+        if(user) {
+            addToWatchList({movie_id: id, title, type: "tvShow", user_id: user.user?.id})
+        }
+        else{
             <Navigate to={"/"}/>
         }
     }

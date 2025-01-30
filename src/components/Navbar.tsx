@@ -1,4 +1,4 @@
-import {Avatar, Box, IconButton, Input, Menu, MenuItem, Typography, useMediaQuery} from "@mui/material";
+import {Avatar, Box, IconButton, Input, Menu, MenuItem, Tooltip, Typography, useMediaQuery} from "@mui/material";
 import {Search}  from "@mui/icons-material";
 import React, {ChangeEvent, useEffect, useState} from "react";
 import GridViewIcon from '@mui/icons-material/GridView';
@@ -6,12 +6,19 @@ import {searchResultTypes} from "../types.tsx";
 import {Link, useLocation} from "react-router";
 import {fetchByName} from "../api/fetchByName.tsx";
 import SearchDropDown from "./SearchDropDown.tsx";
+import AvatarMenu from "./AvatarMenu.tsx";
+import {useQuery} from "@tanstack/react-query";
+import {fetchUser} from "../api/fetchUser.tsx";
 
 export default function Navbar() {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [searchAnchorEl, setSearchAnchorEl] = useState<HTMLElement | null>(null);
+
+    const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
+    const isAvatarOpen = Boolean(avatarAnchorEl);
+
     const isMobile = useMediaQuery("(max-width:750px)");
-    const handleMenuOpen = (event:React.MouseEvent<HTMLElement>) => {setAnchorEl(event.currentTarget);};
+
     const[searchParam,setSearchParam]=useState< React.SetStateAction<string>>("")
     const[searchResult,setSearchResult]=useState<searchResultTypes[]>([])
     const location=useLocation()
@@ -23,11 +30,17 @@ export default function Navbar() {
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchParam(e.target.value);
     };
+
+    const handleMenuOpen = (event:React.MouseEvent<HTMLElement>) => {setAnchorEl(event.currentTarget)}
+
     const handleMenuClose = () => {
         setAnchorEl(null)
         setSearchParam("")
         setSearchResult([])
-    };
+    }
+
+    const handleAvatarMenuOpen = (event:React.MouseEvent<HTMLElement>) => {setAvatarAnchorEl(event.currentTarget)}
+    const handleAvatarMenuClose = () => {setAvatarAnchorEl(null)}
 
     useEffect(() => {
         if (searchParam) {
@@ -37,6 +50,12 @@ export default function Navbar() {
             setSearchResult([]);
         }
     }, [searchParam]);
+
+    const{data:user}=useQuery({
+        queryKey: ['users'],
+        queryFn: fetchUser
+    })
+    console.log(user)
 
     return(
         <>
@@ -95,14 +114,27 @@ export default function Navbar() {
                     <IconButton>
                         <Search id={"search"}/>
                     </IconButton>
-                    <Input placeholder={"Search"} id={"search_input"}
+                    <Input placeholder={"Search for anything..."} id={"search_input"}
                            onChange={handleInputChange} value={searchParam}
-                           onFocus={(e)=> setSearchAnchorEl(e.currentTarget)}
-                    >
+                           onFocus={(e)=> setSearchAnchorEl(e.currentTarget)}/>
 
-                    </Input>
-                    <Avatar id={"avatar"}/>
+                    {user &&
+                    <Tooltip title="Account settings">
+                        <IconButton
+                            onClick={handleAvatarMenuOpen}
+                            size="small"
+                            sx={{ ml: 2 }}
+                            aria-controls={isAvatarOpen ? 'account-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={isAvatarOpen ? 'true' : undefined}
+                        >
+                            <Avatar sx={{ width: 32, height: 32 }} id={"avatar"}>M</Avatar>
+                        </IconButton>
+                    </Tooltip>
+                    }
                 </Box>
+                {user && <AvatarMenu avatarAnchorEl={avatarAnchorEl} handleClose={handleAvatarMenuClose} isAvatarOpen={isAvatarOpen}/>}
+
                 <SearchDropDown anchorEl={searchAnchorEl} handleMenuClose={handleMenuClose} searchResult={searchResult}/>
             </Box>
 
