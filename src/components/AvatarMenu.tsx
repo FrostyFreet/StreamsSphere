@@ -22,7 +22,6 @@ export default function AvatarMenu({avatarAnchorEl, handleClose, isAvatarOpen}: 
         } else {
             console.log("Successfully logged out!");
             navigate("/");
-            window.location.reload();
         }
     }
 

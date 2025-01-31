@@ -6,11 +6,12 @@ import {useLocation, useNavigate} from "react-router";
 import {supabase} from "../../api/supabaseClient.tsx";
 
 
+
 export default function HomePage(){
     const [open, setOpen] = useState(false);
     const location=useLocation()
     const navigate=useNavigate()
-
+    const [aggreed,setAgreed]=useState<boolean>(false)
 
 
     useEffect(() => {
@@ -34,13 +35,15 @@ export default function HomePage(){
     };
     const handleAgree = () => {
         setOpen(false);
+        setAgreed(true)
     };
 
     return(
         <>
             <Navbar/>
             <Header/>
-            <AlertDialog open={open}  handleDisagree={handleDisagree} handleAgree={handleAgree}/>
+            {!aggreed && <AlertDialog open={open}  handleDisagree={handleDisagree} handleAgree={handleAgree}/>}
+
         </>
 
     )
