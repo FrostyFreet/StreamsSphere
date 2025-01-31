@@ -9,12 +9,14 @@ import SeriesPlayer from "./pages/series/SeriesPlayer.tsx";
 import { useState} from "react";
 import {Genre} from "./types.tsx";
 import MainPage from "./pages/home/MainPage.tsx";
-import {fetchUser} from "./api/fetchUser.tsx";
+import {fetchUser} from "./api/auth/fetchUser.tsx";
 import ProtectedRoute from "./pages/auth/ProtectedRoute.tsx";
 import {useQuery} from "@tanstack/react-query";
 import Watchlist from "./pages/bookmarked/Watchlist.tsx";
 import ChangePassword from "./pages/auth/ChangePassword.tsx";
-import {fetchSession} from "./api/fetchSession.tsx";
+import {fetchSession} from "./api/auth/fetchSession.tsx";
+import RecoverPasswordByEmail from "./pages/auth/RecoverPasswordByEmail.tsx";
+import RecoverPassword from "./pages/auth/RecoverPassword.tsx";
 
 
 function App() {
@@ -34,11 +36,6 @@ function App() {
         queryFn:fetchSession,
     });
 
-
-    console.log("session:"+session)
-    console.log("user"+user)
-
-
     return (
 
         <Routes>
@@ -54,7 +51,9 @@ function App() {
                 <Route path="/series/:id/:name" element={<SeriesPlayer />}/>
                 <Route path="/change-password" element={<ChangePassword />}/>
             </Route>
-                <Route path="/register" element={<Register />}/>
+            <Route path="/recover-password-by-email" element={<RecoverPasswordByEmail />}/>
+            <Route path="/recover-password" element={<RecoverPassword />}/>
+            <Route path="/register" element={<Register />}/>
 
         </Routes>
 

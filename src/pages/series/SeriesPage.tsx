@@ -4,15 +4,16 @@ import Navbar from "../../components/Navbar.tsx";
 import {Box, IconButton, Pagination, Stack, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
-import {fetchSeriesPerPage} from "../../api/fetchSeriesPerPage.tsx";
+import {fetchSeriesPerPage} from "../../api/series/fetchSeriesPerPage.tsx";
 import Filter from "../../components/Filter.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {fetchFilteredSeriesPerPage} from "../../api/fetchFilteredSeriesPerPage.tsx";
+import {fetchFilteredSeriesPerPage} from "../../api/series/fetchFilteredSeriesPerPage.tsx";
 import SeriesDialogMenu from "./SeriesDialogMenu.tsx";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
-import {fetchUser} from "../../api/fetchUser.tsx";
-import {addToWatchList} from "../../api/addToWatchList.tsx";
-import {Navigate} from "react-router";
+import {fetchUser} from "../../api/auth/fetchUser.tsx";
+import {addToWatchList} from "../../api/watchlist/addToWatchList.tsx";
+import {Navigate, useNavigate} from "react-router";
+import {fetchSession} from "../../api/auth/fetchSession.tsx";
 
 export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDate,category,setCategory,genres,setGenres}:FilterProps<T>) {
     const[series,setSeries]=useState<seriesType[]>([])
@@ -21,10 +22,14 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
     const [open, setOpen] = useState(false);
     const[clickedSeries,setClickedSeries]=useState<seriesType>()
     const [filteredData,setFilteredData]=useState<seriesType[]>([])
-
+    const navigate=useNavigate()
     const{refetch}=useQuery({ queryKey: ['seriesData',page], queryFn: () => fetchSeriesPerPage(setSeries,page,setTotalPages),refetchOnWindowFocus:false })
     const{refetch:refetchFiltered}=useQuery({ queryKey: ['filteredSeriesData'], queryFn: () => fetchFilteredSeriesPerPage(page, setTotalPages,sortBy,setFilteredData), refetchOnWindowFocus:false })
 
+    const {data:session}=useQuery({
+        queryKey: ['session'],
+        queryFn:fetchSession,
+    });
 
     const handleClickOpen = (id:number) => {
         const found=series.find((series:seriesType)=>series.id===id)
@@ -50,12 +55,14 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
             <Navigate to={"/"}/>
         }
     }
-    console.log("Sortby:"+sortBy," ReleaseDate:"+releaseDate," Category"+category)
+    if(!session){
+        navigate("/")
+    }
 
     return (
         <>
-            <Navbar />
 
+            <Navbar />
             <Box
                 sx={{
                     display: "flex",

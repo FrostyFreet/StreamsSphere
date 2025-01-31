@@ -1,4 +1,4 @@
-import {supabase} from "./supabaseClient.tsx";
+import {supabase} from "../supabaseClient.tsx";
 
 export const deleteFromWatchList=async(movie_id:number|null)=>{
     try {

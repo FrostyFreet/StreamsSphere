@@ -1,5 +1,5 @@
 import axios from "axios";
-import {moviesType} from "../types.tsx";
+import {moviesType} from "../../types.tsx";
 
 export const fetchRecommendedMovies= async (setRecommendedMovies: React.Dispatch<React.SetStateAction<moviesType[]>>)=>{
     const rand=Math.floor(Math.random()*300)

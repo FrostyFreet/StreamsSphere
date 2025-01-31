@@ -1,5 +1,5 @@
 import axios from "axios";
-import {moviesType, searchResultTypes, seriesType} from "../types.tsx";
+import {moviesType, searchResultTypes, seriesType} from "../../types.tsx";
 
 export const fetchByName=async (query: React.SetStateAction<string>, setSearchResult: React.Dispatch<React.SetStateAction<searchResultTypes[]>>)=>{
    await Promise.all([

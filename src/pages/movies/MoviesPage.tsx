@@ -5,14 +5,15 @@ import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import Navbar from "../../components/Navbar.tsx";
-import {fetchMoviesPerPage} from "../../api/fetchMoviesPerPage.tsx";
+import {fetchMoviesPerPage} from "../../api/moviesandseries/fetchMoviesPerPage.tsx";
 import Filter from "../../components/Filter.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {fetchFilteredMoviesPerPage} from "../../api/fetchFilteredMoviesPerPage.tsx";
+import {fetchFilteredMoviesPerPage} from "../../api/movies/fetchFilteredMoviesPerPage.tsx";
 import MoviesDialogMenu from "./MoviesDialogMenu.tsx";
-import {fetchUser} from "../../api/fetchUser.tsx";
-import {Navigate} from "react-router";
-import {addToWatchList} from "../../api/addToWatchList.tsx";
+import {fetchUser} from "../../api/auth/fetchUser.tsx";
+import {Navigate, useNavigate} from "react-router";
+import {addToWatchList} from "../../api/watchlist/addToWatchList.tsx";
+import {fetchSession} from "../../api/auth/fetchSession.tsx";
 
 export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                                           setReleaseDate,
@@ -26,6 +27,12 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
     const [open, setOpen] = useState(false);
     const[clickedMovie,setClickedMovie]=useState<moviesType | undefined>()
     const [filteredData,setFilteredData]=useState<moviesType[]>([])
+    const navigate=useNavigate()
+
+    const {data:session}=useQuery({
+        queryKey: ['session'],
+        queryFn:fetchSession,
+    });
 
     const {refetch}= useQuery({
         queryKey: ['movies',page],
@@ -61,7 +68,10 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
             <Navigate to={"/"}/>
         }
     }
-    console.log(user)
+
+    if(!session){
+        navigate("/")
+    }
 
     return (
         <>

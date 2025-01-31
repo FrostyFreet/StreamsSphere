@@ -1,4 +1,4 @@
-import {supabase} from "./supabaseClient.tsx";
+import {supabase} from "../supabaseClient.tsx";
 
 export const fetchUser=async()=>{
     try {

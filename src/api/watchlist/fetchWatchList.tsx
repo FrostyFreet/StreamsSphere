@@ -1,5 +1,5 @@
-import {supabase} from "./supabaseClient.tsx";
-import {bookmarkedType} from "../types.tsx";
+import {supabase} from "../supabaseClient.tsx";
+import {bookmarkedType} from "../../types.tsx";
 
 export const fetchBookmarked = async (): Promise<bookmarkedType[]> => {
     try{

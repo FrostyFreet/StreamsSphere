@@ -4,11 +4,11 @@ import React, {ChangeEvent, useEffect, useState} from "react";
 import GridViewIcon from '@mui/icons-material/GridView';
 import {searchResultTypes} from "../types.tsx";
 import {Link, useLocation} from "react-router";
-import {fetchByName} from "../api/fetchByName.tsx";
+import {fetchByName} from "../api/moviesandseries/fetchByName.tsx";
 import SearchDropDown from "./SearchDropDown.tsx";
 import AvatarMenu from "./AvatarMenu.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {fetchUser} from "../api/fetchUser.tsx";
+import {fetchUser} from "../api/auth/fetchUser.tsx";
 
 export default function Navbar() {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

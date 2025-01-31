@@ -6,7 +6,7 @@ import StarIcon from "@mui/icons-material/Star";
 import CloseIcon from "@mui/icons-material/Close";
 import {Link} from "react-router";
 import {useQuery} from "@tanstack/react-query";
-import {fetchHomePageSeries} from "../../api/fetchHomePageSeries.tsx";
+import {fetchHomePageSeries} from "../../api/series/fetchHomePageSeries.tsx";
 
 export default function PopularSeries(){
     const[popularSeries,setPopularSeries]=useState<seriesType[]>([])

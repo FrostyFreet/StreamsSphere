@@ -1,6 +1,6 @@
 import axios from "axios";
 import React from "react";
-import {seriesType} from "../types.tsx";
+import {seriesType} from "../../types.tsx";
 
 
 export const fetchSeriesPerPage=async (setSeries: React.Dispatch<React.SetStateAction<seriesType[]>>,page:number,setTotalPages: React.Dispatch<React.SetStateAction<number>>)=>{

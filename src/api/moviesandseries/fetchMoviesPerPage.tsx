@@ -1,5 +1,5 @@
 import axios from "axios";
-import {moviesType} from "../types.tsx";
+import {moviesType} from "../../types.tsx";
 
 export const fetchMoviesPerPage=async (setMoviesPerPage: React.Dispatch<React.SetStateAction<moviesType[]>>, page: number, setTotalPages: React.Dispatch<React.SetStateAction<number>>)=>{
     const resp=await axios.get(`https://api.themoviedb.org/3/movie/popular?page=${page}&api_key=${import.meta.env.VITE_TMDB_APIKEY}`)

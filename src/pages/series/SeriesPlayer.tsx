@@ -1,12 +1,10 @@
 import { useParams} from "react-router";
 import {useEffect, useState} from "react";
-
 import Navbar from "../../components/Navbar.tsx";
 import Box from "@mui/material/Box";
 import {MenuItem, Select, SelectChangeEvent, Skeleton, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
-
 import '../../App.scss'
 
 
@@ -53,7 +51,6 @@ export default function SeriesPlayer(){
                     src={`https://vidlink.pro/tv/${id}/${selectedSeason}/${selectedEpisode}?poster=true&autoPlay=false&primaryColor=f5f5f5&secondaryColor=f5f5f5`}
                         width={'1000px'}
                          allowFullScreen={true}
-
                 >
                 </iframe>
             </Box>

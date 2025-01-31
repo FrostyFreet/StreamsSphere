@@ -1,6 +1,6 @@
 import {useQuery} from "@tanstack/react-query";
 
-import {fetchBookmarked} from "../../api/fetchWatchList.tsx";
+import {fetchBookmarked} from "../../api/watchlist/fetchWatchList.tsx";
 import {bookmarkedType} from "../../types.tsx";
 import Navbar from "../../components/Navbar.tsx";
 import axios from "axios";
@@ -12,7 +12,7 @@ import {useState} from "react";
 import SeriesDialogMenu from "../series/SeriesDialogMenu.tsx";
 import MoviesDialogMenu from "../movies/MoviesDialogMenu.tsx";
 import Modal from '@mui/material/Modal';
-import {deleteFromWatchList} from "../../api/deleteFromWatchList.tsx";
+import {deleteFromWatchList} from "../../api/watchlist/deleteFromWatchList.tsx";
 //ADD BOOKMARK REMOVE AND USER PROFILE TO LOG OUT
 
 export default function Watchlist(){

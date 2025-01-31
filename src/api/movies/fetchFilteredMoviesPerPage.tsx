@@ -1,4 +1,4 @@
-import {moviesType} from "../types.tsx";
+import {moviesType} from "../../types.tsx";
 import axios from "axios";
 
 

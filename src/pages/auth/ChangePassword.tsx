@@ -14,53 +14,84 @@ import {
 import {SubmitHandler, useForm} from "react-hook-form";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import Navbar from "../../components/Navbar.tsx";
+import {useQuery} from "@tanstack/react-query";
+import {fetchSession} from "../../api/auth/fetchSession.tsx";
 
 interface registerType{
     currentPassword:string,
     newPassword:string,
     confirmNewPassword:string
+    email?:string | undefined
 }
 
-export default function Register() {
-    const [currentPassword, setCurrentPassword] = useState<string>("");
-    const [newPassword, setNewPasswordPassword] = useState<string>("");
-    const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
-    const { register, handleSubmit,formState: { errors } } = useForm<registerType>();
-    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-    const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+export default function ChangePassword() {
+    const [currentPassword, setCurrentPassword] = useState<string>("")
+    const [newPassword, setNewPasswordPassword] = useState<string>("")
+    const [confirmNewPassword, setConfirmNewPassword] = useState<string>("")
+    const { register, handleSubmit,formState: { errors } } = useForm<registerType>()
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+    const [showNewPassword, setShowNewPassword] = useState(false)
+    const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false)
+
+    const {data:session}=useQuery({
+        queryKey: ['session'],
+        queryFn:fetchSession,
+    });
+
 
     const handleClickShowCurrentPassword = () => {
-        setShowCurrentPassword((prev) => !prev);
+        setShowCurrentPassword((prev) => !prev)
     };
     const handleClickShowNewPassword = () => {
-        setShowNewPassword((prev) => !prev);
+        setShowNewPassword((prev) => !prev)
     };
     const handleClickShowConfirmNewPassword = () => {
-        setShowConfirmNewPassword((prev) => !prev);
+        setShowConfirmNewPassword((prev) => !prev)
     };
 
 
     const onSubmit: SubmitHandler<registerType> =async()=>{
-        if(newPassword===confirmNewPassword){
-            const { data, error } = await supabase.auth.updateUser({
-                password: newPassword
-            })
-            if(error){
-                console.error("Error occured while logging in:",error)
+        try{
+            const email = session?.user?.email
+            if (!email) {
+                console.error("User email is not available.")
+                return
             }
-            if(data){
-                console.log(data)
-                setCurrentPassword("")
-                setNewPasswordPassword("")
-                setConfirmNewPassword("")
+
+            const { data: reAuthData, error: reAuthError } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: currentPassword,
+            })
+            if(reAuthData){
+                if(newPassword===confirmNewPassword){
+                    const { data, error } = await supabase.auth.updateUser({
+                        password: newPassword
+                    })
+                    if(error){
+                        console.error("Error occured while logging in:",error)
+                    }
+                    if(data){
+                        console.log(data)
+                        setCurrentPassword("")
+                        setNewPasswordPassword("")
+                        setConfirmNewPassword("")
+                    }
+                }
+            }
+            else{
+                console.error(reAuthError)
             }
         }
+        catch (e){
+            console.error(e)
+        }
+
     }
     return(
         <>
-
-            <Navbar/>
+            {session!=null || session!=undefined &&
+                <Navbar/>
+            }
             <Box display="flex" alignItems="center" justifyContent="center" height={"100vh"}>
                 <Box
                     display="flex"
@@ -83,24 +114,26 @@ export default function Register() {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <FormGroup>
                             <FormControl margin="normal" fullWidth>
-                                <InputLabel htmlFor="currentPassword">Current Password</InputLabel>
-                                <Input
-                                    type={showCurrentPassword ? 'text' : 'password'}
-                                    id="currentPassword" aria-describedby="currentPassword-helper-text" value={currentPassword}
-                                       {...register("currentPassword", {
-                                           required: "Current password is required",
+                                        <InputLabel htmlFor="currentPassword">Current Password</InputLabel>
+                                        <Input
+                                            type={showCurrentPassword ? 'text' : 'password'}
+                                            id="currentPassword" aria-describedby="currentPassword-helper-text" value={currentPassword}
+                                               {...register("currentPassword", {
+                                                   required: "Current password is required",
 
-                                       })}
-                                       onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setCurrentPassword(e.target.value)}
-                                       endAdornment={
-                                           <InputAdornment position="end">
-                                               <IconButton onClick={handleClickShowCurrentPassword} edge="end">
-                                                   {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
-                                               </IconButton>
-                                           </InputAdornment>
-                                       }
-                                />
-                                {errors.currentPassword && <FormHelperText error>{errors.currentPassword.message}</FormHelperText>}
+                                               })}
+                                               onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setCurrentPassword(e.target.value)}
+                                               endAdornment={
+                                                   <InputAdornment position="end">
+                                                       <IconButton onClick={handleClickShowCurrentPassword} edge="end">
+                                                           {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
+                                                       </IconButton>
+                                                   </InputAdornment>
+                                               }
+                                        />
+                                        {errors.currentPassword && <FormHelperText error>{errors.currentPassword.message}</FormHelperText>}
+
+
 
                             </FormControl>
 

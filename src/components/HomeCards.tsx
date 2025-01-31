@@ -1,13 +1,13 @@
 import {Box, Skeleton} from "@mui/material";
 
 import {useQuery} from "@tanstack/react-query";
-import {fetchPopularData} from "../api/fetchPopularData.tsx";
+import {fetchPopularData} from "../api/moviesandseries/fetchPopularData.tsx";
 import {CSSProperties} from "react";
 import {Link} from "react-router";
 import {HomeCardsProps} from "../types.tsx";
-import {fetchTopRatedData} from "../api/fetchTopRatedData.tsx";
-import {fetchRecommendedData} from "../api/fetchRecommendedData.tsx";
-import { fetchLatestData} from "../api/fetchLatestData.tsx";
+import {fetchTopRatedData} from "../api/moviesandseries/fetchTopRatedData.tsx";
+import {fetchRecommendedData} from "../api/moviesandseries/fetchRecommendedData.tsx";
+import { fetchLatestData} from "../api/moviesandseries/fetchLatestData.tsx";
 
 export default function HomeCards({clickedButton}:HomeCardsProps){
     const {data:popularData } = useQuery({queryKey: ['popularData'],queryFn: fetchPopularData })

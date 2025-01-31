@@ -21,8 +21,8 @@ export default function AvatarMenu({avatarAnchorEl, handleClose, isAvatarOpen}: 
             console.error("Sign out error:", error.message);
         } else {
             console.log("Successfully logged out!");
-
             navigate("/");
+            window.location.reload();
         }
     }
 

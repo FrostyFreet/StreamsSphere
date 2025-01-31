@@ -1,5 +1,5 @@
 import axios from "axios";
-import {seriesType} from "../types.tsx";
+import {seriesType} from "../../types.tsx";
 
 
 export const fetchFilteredSeriesPerPage = async (page: number, setTotalPages: React.Dispatch<React.SetStateAction<number>>, sortBy: string, setFilteredData: (value: (((prevState: seriesType[]) => seriesType[]) | seriesType[])) => void) =>{

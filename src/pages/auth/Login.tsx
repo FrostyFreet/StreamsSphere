@@ -99,6 +99,9 @@ export default function Login(){
                         <Typography variant="body2" align="center" style={{marginTop: '12px'}}>
                             Don't have an account? <a href="/register">Sign Up</a>
                         </Typography>
+                        <Typography variant="body2" align="center" style={{marginTop: '12px'}}>
+                            Forgot Password? <a href="/recover-password-by-email">Reset Password</a>
+                        </Typography>
                     </FormGroup>
                 </form>
                 

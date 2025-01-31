@@ -3,13 +3,14 @@ import Box from '@mui/material/Box';
 import Navbar from "../../components/Navbar.tsx";
 import {Typography} from "@mui/material";
 import {useEffect, useState} from "react";
-import {fetchRecommendedMovies} from "../../api/fetchRecommendedMovies.tsx";
+import {fetchRecommendedMovies} from "../../api/movies/fetchRecommendedMovies.tsx";
 import {moviesType} from "../../types.tsx";
 import Grid from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 import '../../App.scss'
 import Iframe from 'react-iframe'
 import MoviesDialogMenu from "./MoviesDialogMenu.tsx";
+
 
 export default function MoviePlayer(){
     const {id} = useParams();
@@ -24,10 +25,13 @@ export default function MoviePlayer(){
         setOpen(true);
     };
     const handleClose = () => {setOpen(false);};
-    console.log(open)
+
     useEffect(() => {
         fetchRecommendedMovies(setRecommendedMovies)
+
     }, [id]);
+
+
 
 
     return (

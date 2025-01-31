@@ -1,4 +1,4 @@
-import {seriesType} from "../types.tsx";
+import {seriesType} from "../../types.tsx";
 import axios from "axios";
 
 export const fetchHomePageSeries= async (setPopularSeries: (value: (((prevState: seriesType[]) => seriesType[]) | seriesType[])) => void)=>{
