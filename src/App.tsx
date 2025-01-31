@@ -51,9 +51,9 @@ function App() {
                 <Route path="/series/:id/:name" element={<SeriesPlayer />}/>
                 <Route path="/change-password" element={<ChangePassword />}/>
             </Route>
-            <Route path="/recover-password-by-email" element={<RecoverPasswordByEmail />}/>
-            <Route path="/recover-password" element={<RecoverPassword />}/>
-            <Route path="/register" element={<Register />}/>
+                <Route path="/recover-password-by-email" element={<RecoverPasswordByEmail />}/>
+                <Route path="/recover-password" element={<RecoverPassword />}/>
+                <Route path="/register" element={<Register />}/>
 
         </Routes>
 
