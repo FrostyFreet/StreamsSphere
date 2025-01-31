@@ -15,7 +15,8 @@ export default function HomePage(){
 
 
     useEffect(() => {
-        if (location.pathname === "/home") {
+        const hasAgreed = localStorage.getItem("hasAgreed");
+        if (location.pathname === "/home" && !hasAgreed) {
             setOpen(true);
         }
     }, [location.pathname]);
@@ -36,6 +37,7 @@ export default function HomePage(){
     const handleAgree = () => {
         setOpen(false);
         setAgreed(true)
+        localStorage.setItem("hasAgreed", "true");
     };
 
     return(
