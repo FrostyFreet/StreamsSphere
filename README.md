@@ -25,3 +25,10 @@ Streamssphere is a feature-rich web application that allows users to explore, fi
 - **Authentication & Database**: Supabase, PostgreSQL
 - **State Management & Caching**: React Query
 - **Hosting**: Vercel / Netlify (if applicable)
+
+## Future Improvements
+🔹 User ratings & reviews
+
+🔹 Personalized recommendations based on watch history
+
+🔹 Notification system for new releases
