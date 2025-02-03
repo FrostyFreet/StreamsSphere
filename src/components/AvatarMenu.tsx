@@ -3,6 +3,9 @@ import {Logout} from "@mui/icons-material";
 
 import {supabase} from "../api/supabaseClient.tsx";
 import {Link, useNavigate} from "react-router";
+import {useQuery} from "@tanstack/react-query";
+import {fetchSession} from "../api/auth/fetchSession.tsx";
+import {useEffect} from "react";
 
 interface AvatarMenuProps {
     avatarAnchorEl: HTMLElement | null;
@@ -15,6 +18,11 @@ interface AvatarMenuProps {
 export default function AvatarMenu({avatarAnchorEl, handleClose, isAvatarOpen}: AvatarMenuProps) {
     const navigate = useNavigate();
 
+    const {data:session}=useQuery({
+        queryKey: ['session'],
+        queryFn:fetchSession,
+    });
+
     const signOut=async()=>{
         const { error } = await supabase.auth.signOut()
         if (error) {
@@ -24,6 +32,11 @@ export default function AvatarMenu({avatarAnchorEl, handleClose, isAvatarOpen}: 
             navigate("/");
         }
     }
+    useEffect(()=>{
+        if(session===null || session===undefined){
+            navigate("/");
+        }
+    },[session])
 
     return (
         <>

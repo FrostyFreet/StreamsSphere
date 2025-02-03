@@ -47,7 +47,7 @@ function App() {
 
 
             <Routes>
-                <Route path="/" element={!session  ? <MainPage />  : <Navigate to="/home" /> } />
+                <Route path="/" element={session===undefined || session===null ? <MainPage />  : <Navigate to="/home" /> } />
                 <Route element={<ProtectedRoute user={user} />}>
                     <Route path="/home" element={<HomePage />}/>
                     <Route path="/movies" element={<MoviesPage sortBy={sortBy} setSortBy={setSortBy} releaseDate={releaseDate}
