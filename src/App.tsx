@@ -9,7 +9,6 @@ import SeriesPlayer from "./pages/series/SeriesPlayer.tsx";
 import { useState} from "react";
 import { Genre} from "./types.tsx";
 import MainPage from "./pages/home/MainPage.tsx";
-import {fetchUser} from "./api/auth/fetchUser.tsx";
 import ProtectedRoute from "./pages/auth/ProtectedRoute.tsx";
 import {useQuery} from "@tanstack/react-query";
 import Watchlist from "./pages/bookmarked/Watchlist.tsx";
@@ -27,10 +26,7 @@ function App() {
     const [genres, setGenres] = useState<Genre[]>([])
 
 
-    const {data:user } = useQuery({
-        queryKey: ['users'],
-        queryFn: fetchUser,
-    });
+
 
     const {data:session}=useQuery({
         queryKey: ['session'],
@@ -45,7 +41,7 @@ function App() {
 
             <Routes>
                 <Route path="/" element={session===null || session===undefined  ? <MainPage />  : <Navigate to="/home" /> } />
-                <Route element={<ProtectedRoute user={user} />}>
+                <Route element={<ProtectedRoute user={session} />}>
                     <Route path="/home" element={<HomePage />}/>
                     <Route path="/movies" element={<MoviesPage sortBy={sortBy} setSortBy={setSortBy} releaseDate={releaseDate}
                                                                setReleaseDate={setReleaseDate} category={category} setCategory={setCategory} genres={genres} setGenres={setGenres} />}/>
