@@ -1,5 +1,6 @@
 📽️ Streamssphere
 A modern streaming platform for discovering and bookmarking movies & series
+🔗 https://streaamsspehere.netlify.app
 
 ## Overview
 Streamssphere is a feature-rich web application that allows users to explore, filter, and watch movies and series. Built with React, Supabase, and PostgreSQL, it provides a smooth authentication system, dynamic UI elements, and a personalized watchlist feature.
