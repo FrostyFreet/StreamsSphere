@@ -111,7 +111,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                                         style={{ width: "100%", height: "auto", borderRadius: "8px",boxShadow: "3px 3px 3px black", }}
                                         src={`https://image.tmdb.org/t/p/original/${filtered.poster_path}`}
                                         onClick={() => handleClickOpen(filtered.id)}
-                                        loading="eager"
+                                        loading="lazy"
                                     />
                                         :
                                         <Skeleton variant="rectangular" style={{ width: "100%", height: "auto", borderRadius: "8px",boxShadow: "3px 3px 3px black", }}/>

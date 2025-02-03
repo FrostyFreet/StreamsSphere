@@ -13,16 +13,24 @@ import SeriesDialogMenu from "../series/SeriesDialogMenu.tsx";
 import MoviesDialogMenu from "../movies/MoviesDialogMenu.tsx";
 import Modal from '@mui/material/Modal';
 import {deleteFromWatchList} from "../../api/watchlist/deleteFromWatchList.tsx";
-//ADD BOOKMARK REMOVE AND USER PROFILE TO LOG OUT
+import {fetchUser} from "../../api/auth/fetchUser.tsx";
 
 export default function Watchlist(){
     const [open, setOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const[clickedItem,setClickedItem]=useState<bookmarkedType>()
     const[toBeDeletedItem,setToBeDeletedItem]=useState<number |null>(null)
+
+    const {data: user } = useQuery({
+        queryKey: ['users'],
+        queryFn: fetchUser,
+    });
+
+    const id:string | undefined=user?.user?.id
+    console.log(id)
     const{data=[],refetch}=useQuery<bookmarkedType[]>({
         queryKey: ['BookmarkedData'],
-        queryFn: ()=>fetchBookmarked()
+        queryFn: ()=>fetchBookmarked(id)
     })
 
     const { data: detailsData } = useQuery({
@@ -71,7 +79,7 @@ export default function Watchlist(){
         setToBeDeletedItem(id);
     }
 
-    console.log(toBeDeletedItem)
+    console.log(results)
     return(
         <>
             <Navbar/>
