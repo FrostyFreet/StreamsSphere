@@ -1,7 +1,7 @@
 import {Box, Button, FormControl, FormGroup, FormHelperText, Input, InputLabel, Typography} from "@mui/material";
 import {ChangeEvent, useState} from "react";
 import {supabase} from "../../api/supabaseClient.tsx";
-import {useNavigate} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {SubmitHandler, useForm} from "react-hook-form";
 
 
@@ -97,10 +97,10 @@ export default function Login(){
                         </Button>
 
                         <Typography variant="body2" align="center" style={{marginTop: '12px'}}>
-                            Don't have an account? <a href="/register">Sign Up</a>
+                            Don't have an account? <Link to={"/register"}>Sign Up</Link>
                         </Typography>
                         <Typography variant="body2" align="center" style={{marginTop: '12px'}}>
-                            Forgot Password? <a href="/recover-password-by-email">Reset Password</a>
+                            Forgot Password? <Link to="/recover-password-by-email">Reset Password</Link>
                         </Typography>
                     </FormGroup>
                 </form>

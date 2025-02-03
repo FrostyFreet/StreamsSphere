@@ -6,7 +6,7 @@ import SeriesPage from "./pages/series/SeriesPage.tsx";
 import Register from "./pages/auth/Register.tsx";
 import MoviePlayer from "./pages/movies/MoviePlayer.tsx";
 import SeriesPlayer from "./pages/series/SeriesPlayer.tsx";
-import { useState} from "react";
+import {useState} from "react";
 import {Genre} from "./types.tsx";
 import MainPage from "./pages/home/MainPage.tsx";
 import {fetchUser} from "./api/auth/fetchUser.tsx";
@@ -35,6 +35,8 @@ function App() {
         queryKey: ['session'],
         queryFn:fetchSession,
     });
+
+
 
     return (
 
