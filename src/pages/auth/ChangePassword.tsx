@@ -89,10 +89,10 @@ export default function ChangePassword() {
     }
     return(
         <>
-            {session!=null || session!=undefined &&
+            {session &&
                 <Navbar/>
             }
-            <Box display="flex" alignItems="center" justifyContent="center" height={"100vh"}>
+            <Box display="flex" alignItems="center" justifyContent="center" height={"100%"}>
                 <Box
                     display="flex"
                     flexDirection="column"

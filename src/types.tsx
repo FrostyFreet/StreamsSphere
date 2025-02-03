@@ -34,6 +34,11 @@ export interface searchResultTypes {
     type?: string
 }
 
+export interface darkModeType{
+    darkMode:boolean,
+    setDarkMode: React.Dispatch<React.SetStateAction<boolean>>
+}
+
 
 export interface genreType {
     id: number;

@@ -1,5 +1,5 @@
 import {Avatar, Box, IconButton, Input, Menu, MenuItem, Tooltip, Typography, useMediaQuery} from "@mui/material";
-import {Search}  from "@mui/icons-material";
+import SearchIcon from '@mui/icons-material/Search';
 import React, {ChangeEvent, useEffect, useState} from "react";
 import GridViewIcon from '@mui/icons-material/GridView';
 import {searchResultTypes} from "../types.tsx";
@@ -9,6 +9,9 @@ import SearchDropDown from "./SearchDropDown.tsx";
 import AvatarMenu from "./AvatarMenu.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {fetchUser} from "../api/auth/fetchUser.tsx";
+
+
+
 
 export default function Navbar() {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -26,6 +29,7 @@ export default function Navbar() {
     const series=location.pathname==="/series"
     const movies=location.pathname==="/movies"
     const watchlist=location.pathname==="/watchlist"
+
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchParam(e.target.value);
@@ -110,9 +114,12 @@ export default function Navbar() {
                         </Box>
                     )
                 }
+
                 <Box id={"icons"}>
+
                     <IconButton>
-                        <Search id={"search"}/>
+                        <SearchIcon id={"search"}/>
+
                     </IconButton>
                     <Input placeholder={"Search for anything..."} id={"search_input"}
                            onChange={handleInputChange} value={searchParam}

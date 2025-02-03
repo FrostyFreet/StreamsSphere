@@ -66,6 +66,7 @@ export default function AvatarMenu({avatarAnchorEl, handleClose, isAvatarOpen}: 
             >
                 <Link to={"/change-password"} style={{textDecoration:'none',color:'black'}}>
                     <MenuItem onClick={handleClose}>
+                        
                         <Avatar/> Profile
                     </MenuItem>
                 </Link>

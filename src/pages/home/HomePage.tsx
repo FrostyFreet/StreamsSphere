@@ -7,6 +7,7 @@ import {supabase} from "../../api/supabaseClient.tsx";
 
 
 
+
 export default function HomePage(){
     const [open, setOpen] = useState(false);
     const location=useLocation()
@@ -42,7 +43,7 @@ export default function HomePage(){
 
     return(
         <>
-            <Navbar/>
+            <Navbar />
             <Header/>
             {!aggreed && <AlertDialog open={open}  handleDisagree={handleDisagree} handleAgree={handleAgree}/>}
 

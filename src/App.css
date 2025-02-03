@@ -52,6 +52,12 @@ body {
   font-size: 18px;
 }
 
+#search {
+  padding-top: 15px;
+  font-size: 25px;
+  color: black;
+}
+
 #home:hover, #movies:hover, #tv_shows:hover, #watchlist:hover, #search:hover {
   text-decoration: underline;
   text-shadow: #8F00FD 1px 0 15px;
