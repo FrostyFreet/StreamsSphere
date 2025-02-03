@@ -1,50 +1,27 @@
-# React + TypeScript + Vite
+📽️ Streamssphere
+A modern streaming platform for discovering and bookmarking movies & series
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+Streamssphere is a feature-rich web application that allows users to explore, filter, and watch movies and series. Built with React, Supabase, and PostgreSQL, it provides a smooth authentication system, dynamic UI elements, and a personalized watchlist feature.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+✅ User Authentication: Sign up, log in, log out, reset password (powered by Supabase).
 
-## Expanding the ESLint configuration
+✅ Dynamic Movie Browsing: Explore popular, top-rated, and recommended content.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+✅ Advanced Search & Filters: Search for movies/series by title, category, release date, and popularity.
 
-- Configure the top-level `parserOptions` property like this:
+✅ Movie Player Page: Watch movies, see episode lists for series, and get recommendations.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+✅ Bookmark System: Save movies to a personal watchlist (stored in PostgreSQL).
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+✅ Interactive UI: Smooth card animations and an intuitive user experience.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+✅ Session Management: Users must agree to content availability before browsing.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Tech Stack
+- **Frontend**: React, TypeScript, Material-UI
+- **Authentication & Database**: Supabase, PostgreSQL
+- **State Management & Caching**: React Query
+- **Hosting**: Vercel / Netlify (if applicable)
