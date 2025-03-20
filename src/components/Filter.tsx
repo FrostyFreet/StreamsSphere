@@ -18,10 +18,9 @@ import axios from "axios";
 import {useLocation} from "react-router";
 import {FilterProps, genreType} from "../types.tsx";
 import FilterListIcon from '@mui/icons-material/FilterList';
-let movie=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
-let tv=`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=true`
+let movie=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=false`
+let tv=`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=false`
 export default function Filter<T>({ setFilteredData,sortBy,setSortBy,setPage,releaseDate,setReleaseDate,category,setCategory,genres,setGenres }: FilterProps<T>) {
-
 
     const[clickedButton,setClickedButton]= useState<{ [ key:string]: boolean }>({})
     const[filtersApplied,setFiltersApplied]=useState<boolean>(false)
