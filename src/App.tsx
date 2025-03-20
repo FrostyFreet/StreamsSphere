@@ -21,7 +21,7 @@ import RecoverPassword from "./pages/auth/RecoverPassword.tsx";
 
 
 function App() {
-    const[sortBy,setSortBy]=useState<string>("popularity.desc")
+    const[sortBy,setSortBy]=useState<string>("popularity.asc")
     const[releaseDate,setReleaseDate]=useState<string>()
     const[category,setCategory]=useState<number[]>([])
     const [genres, setGenres] = useState<Genre[]>([])

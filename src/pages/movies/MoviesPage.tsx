@@ -72,7 +72,8 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
     if(!session){
         navigate("/")
     }
-
+    console.log(filteredData)
+    console.log(sortBy,releaseDate,category,genres)
     return (
         <>
             <Navbar />
@@ -91,7 +92,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                 </Box>
 
                 <Grid container spacing={2} sx={{ alignItems: "center" }}>
-                    {filteredData && sortBy!="popularity.desc" || releaseDate!=undefined || category!=undefined || genres!=undefined
+                    {filteredData && sortBy!=="popularity.desc" || releaseDate!==undefined || category!==undefined || genres!==undefined
                         ? filteredData.map((filtered:moviesType) => (
                             <Grid key={filtered.id} size={{xs:12, sm:6, md:4, lg:2.4}}>
                                 <Box
@@ -129,7 +130,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                                         alignItems="center"
                                     >
                                         <StarIcon sx={{ fontSize: "1rem", marginRight: "4px", color: "gold" }} />
-                                        <Typography variant="body2">{filtered.vote_average.toFixed(1)}</Typography>
+                                        <Typography variant="body2">{filtered && filtered?.vote_average ? filtered?.vote_average.toFixed(1)! : 0}</Typography>
                                     </Box>
 
                                     <Box
@@ -207,7 +208,9 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                                     </Box>
                                 </Box>
                             </Grid>
-                        ))}
+                        )
+
+                        )}
                 </Grid>
 
                 <MoviesDialogMenu open={open} handleClose={handleClose} clickedMovie={clickedMovie}/>
