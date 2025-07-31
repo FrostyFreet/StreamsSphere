@@ -21,7 +21,7 @@ import RecoverPassword from "./pages/auth/RecoverPassword.tsx";
 
 
 function App() {
-    const[sortBy,setSortBy]=useState<string>("popularity.asc")
+    const[sortBy,setSortBy]=useState<string>("popularity.desc")
     const[releaseDate,setReleaseDate]=useState<string>()
     const[category,setCategory]=useState<number[]>([])
     const [genres, setGenres] = useState<Genre[]>([])
@@ -43,9 +43,6 @@ function App() {
 
 
     return (
-
-
-
             <Routes>
                 <Route path="/" element={session===undefined || session===null ? <MainPage />  : <Navigate to="/home" /> } />
                 <Route element={<ProtectedRoute user={user} />}>

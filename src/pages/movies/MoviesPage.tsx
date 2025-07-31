@@ -34,15 +34,17 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
         queryFn:fetchSession,
     });
 
+
     const {refetch}= useQuery({
-        queryKey: ['movies',page],
-        queryFn: () => fetchMoviesPerPage(setMovies, page, setTotalPages),
+        queryKey: ['movies',page, sortBy],
+        queryFn: () => fetchMoviesPerPage(setMovies, page, setTotalPages, sortBy),
         refetchOnWindowFocus:false
     })
     const{refetch:refetchFiltered}=useQuery({
         queryKey: ['filteredMovies',page],
         queryFn: () => fetchFilteredMoviesPerPage(page, setTotalPages,sortBy,setFilteredData),
         refetchOnWindowFocus:false })
+
     const handleClickOpen = (id:number) => {
         const found=movies.find((movie)=>movie.id===id)
         setClickedMovie(found)
@@ -72,8 +74,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
     if(!session){
         navigate("/")
     }
-    console.log(filteredData)
-    console.log(sortBy,releaseDate,category,genres)
+
     return (
         <>
             <Navbar />
@@ -92,7 +93,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                 </Box>
 
                 <Grid container spacing={2} sx={{ alignItems: "center" }}>
-                    {filteredData && sortBy!=="popularity.desc" || releaseDate!==undefined || category!==undefined || genres!==undefined
+                    {filteredData && filteredData.length > 0
                         ? filteredData.map((filtered:moviesType) => (
                             <Grid key={filtered.id} size={{xs:12, sm:6, md:4, lg:2.4}}>
                                 <Box

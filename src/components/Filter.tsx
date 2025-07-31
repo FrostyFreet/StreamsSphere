@@ -18,8 +18,6 @@ import axios from "axios";
 import {useLocation} from "react-router";
 import {FilterProps, genreType} from "../types.tsx";
 import FilterListIcon from '@mui/icons-material/FilterList';
-let movie=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&include_adult=false`
-let tv=`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&sort_by&include_adult=false`
 export default function Filter<T>({ setFilteredData,sortBy,setSortBy,setPage,releaseDate,setReleaseDate,category,setCategory,genres,setGenres }: FilterProps<T>) {
 
     const[clickedButton,setClickedButton]= useState<{ [ key:string]: boolean }>({})
@@ -61,16 +59,19 @@ export default function Filter<T>({ setFilteredData,sortBy,setSortBy,setPage,rel
         if(isMoviePage){
             const response = await axios.get(moviesUrl);
             setGenres(response.data.genres);
-            return response.data.results;
+            return response.data.genres || [];
         }
         if(isSeriesPage){
             const response = await axios.get(seriesUrl);
             setGenres(response.data.genres);
-            return response.data.results;
+            return response.data.genres ||[];
         }
 
+        return [];
     }
     const fetchFilteredMovies=async ()=>{
+        let movie=`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_APIKEY}&include_adult=false`
+
         if(sortBy){
             movie+=`&sort_by=${sortBy}`
         }
@@ -88,6 +89,7 @@ export default function Filter<T>({ setFilteredData,sortBy,setSortBy,setPage,rel
         return response.data.results;
     }
     const fetchFilterSeries=async ()=>{
+        let tv = `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&include_adult=false`;
         if(sortBy){
             tv+=`&sort_by=${sortBy}`
         }
@@ -162,7 +164,7 @@ export default function Filter<T>({ setFilteredData,sortBy,setSortBy,setPage,rel
                         <Typography variant="subtitle1">Sort by:</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Select fullWidth defaultValue="popularity.desc" onChange={handleSortChange}>
+                        <Select fullWidth value={sortBy} onChange={handleSortChange}>
                             <MenuItem value="popularity.desc" >Rating Descending</MenuItem>
                             <MenuItem value="popularity.asc" >Rating Ascending</MenuItem>
                             <MenuItem value="primary_release_date.desc">Release Date Descending</MenuItem>
