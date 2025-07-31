@@ -71,7 +71,7 @@ export default function ChangePassword() {
             }
             if (reAuthData) {
                 if (newPassword === confirmNewPassword) {
-                    const { data, error } = await supabase.auth.updateUser({
+                    const {error } = await supabase.auth.updateUser({
                         password: newPassword
                     })
                     if (error) {
