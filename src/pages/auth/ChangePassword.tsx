@@ -9,7 +9,8 @@ import {
     Input,
     InputAdornment,
     InputLabel,
-    Typography
+    Typography,
+    Alert
 } from "@mui/material";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
@@ -32,12 +33,13 @@ export default function ChangePassword() {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false)
     const [showNewPassword, setShowNewPassword] = useState(false)
     const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false)
+    const [message, setMessage] = useState<string | null>(null)
+    const [messageType, setMessageType] = useState<'success' | 'error'>('success')
 
     const {data:session}=useQuery({
         queryKey: ['session'],
         queryFn:fetchSession,
     });
-
 
     const handleClickShowCurrentPassword = () => {
         setShowCurrentPassword((prev) => !prev)
@@ -49,12 +51,12 @@ export default function ChangePassword() {
         setShowConfirmNewPassword((prev) => !prev)
     };
 
-
-    const onSubmit: SubmitHandler<registerType> =async()=>{
-        try{
+    const onSubmit: SubmitHandler<registerType> = async () => {
+        try {
             const email = session?.user?.email
             if (!email) {
-                console.error("User email is not available.")
+                setMessage("User email is not available.")
+                setMessageType('error')
                 return
             }
 
@@ -62,31 +64,37 @@ export default function ChangePassword() {
                 email: email,
                 password: currentPassword,
             })
-            if(reAuthData){
-                if(newPassword===confirmNewPassword){
+            if (reAuthError) {
+                setMessage("Current password is incorrect.")
+                setMessageType('error')
+                return
+            }
+            if (reAuthData) {
+                if (newPassword === confirmNewPassword) {
                     const { data, error } = await supabase.auth.updateUser({
                         password: newPassword
                     })
-                    if(error){
-                        console.error("Error occured while logging in:",error)
-                    }
-                    if(data){
-                        console.log(data)
+                    if (error) {
+                        setMessage("Error occurred while changing password.")
+                        setMessageType('error')
+                    } else {
+                        setMessage("Password changed successfully.")
+                        setMessageType('success')
                         setCurrentPassword("")
                         setNewPasswordPassword("")
                         setConfirmNewPassword("")
                     }
+                } else {
+                    setMessage("New passwords do not match.")
+                    setMessageType('error')
                 }
             }
-            else{
-                console.error(reAuthError)
-            }
+        } catch (e) {
+            setMessage("An unexpected error occurred.")
+            setMessageType('error')
         }
-        catch (e){
-            console.error(e)
-        }
-
     }
+
     return(
         <>
             {session &&
@@ -111,30 +119,31 @@ export default function ChangePassword() {
                     <Typography variant="h5" component="h2" gutterBottom>
                         Change Password
                     </Typography>
+                    {message && (
+                        <Alert severity={messageType} sx={{ mb: 2 }}>
+                            {message}
+                        </Alert>
+                    )}
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <FormGroup>
                             <FormControl margin="normal" fullWidth>
-                                        <InputLabel htmlFor="currentPassword">Current Password</InputLabel>
-                                        <Input
-                                            type={showCurrentPassword ? 'text' : 'password'}
-                                            id="currentPassword" aria-describedby="currentPassword-helper-text" value={currentPassword}
-                                               {...register("currentPassword", {
-                                                   required: "Current password is required",
-
-                                               })}
-                                               onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setCurrentPassword(e.target.value)}
-                                               endAdornment={
-                                                   <InputAdornment position="end">
-                                                       <IconButton onClick={handleClickShowCurrentPassword} edge="end">
-                                                           {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
-                                                       </IconButton>
-                                                   </InputAdornment>
-                                               }
-                                        />
-                                        {errors.currentPassword && <FormHelperText error>{errors.currentPassword.message}</FormHelperText>}
-
-
-
+                                <InputLabel htmlFor="currentPassword">Current Password</InputLabel>
+                                <Input
+                                    type={showCurrentPassword ? 'text' : 'password'}
+                                    id="currentPassword" aria-describedby="currentPassword-helper-text" value={currentPassword}
+                                    {...register("currentPassword", {
+                                        required: "Current password is required",
+                                    })}
+                                    onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setCurrentPassword(e.target.value)}
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton onClick={handleClickShowCurrentPassword} edge="end">
+                                                {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    }
+                                />
+                                {errors.currentPassword && <FormHelperText error>{errors.currentPassword.message}</FormHelperText>}
                             </FormControl>
 
                             <FormControl margin="normal" fullWidth>
@@ -142,13 +151,13 @@ export default function ChangePassword() {
                                 <Input
                                     type={showNewPassword ? 'text' : 'password'}
                                     id="newPassword"  value={newPassword}
-                                       {...register("newPassword", {
-                                           required: "New Password is required",
-                                           minLength: {
-                                               value: 8,
-                                               message: "Password must be at least 8 characters long"
-                                           }
-                                       })}
+                                    {...register("newPassword", {
+                                        required: "New Password is required",
+                                        minLength: {
+                                            value: 8,
+                                            message: "Password must be at least 8 characters long"
+                                        }
+                                    })}
                                     onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setNewPasswordPassword(e.target.value)}
                                     endAdornment={
                                         <InputAdornment position="end">
@@ -157,39 +166,34 @@ export default function ChangePassword() {
                                             </IconButton>
                                         </InputAdornment>
                                     }
-
                                 />
                                 {errors.newPassword ? <FormHelperText error>{errors.newPassword.message}</FormHelperText> :<FormHelperText></FormHelperText>}
-
-
                             </FormControl>
                             <FormControl margin="normal" fullWidth>
                                 <InputLabel htmlFor="confirmNewPassword">Confirm New Password</InputLabel>
                                 <Input
                                     type={showConfirmNewPassword ? 'text' : 'password'}
                                     id="confirmNewPassword" value={confirmNewPassword}
-                                       {...register("confirmNewPassword", {
-                                           required: "Please confirm your password",
-                                           validate: value => value === confirmNewPassword || "Passwords do not match"
-                                       })}
-                                       onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setConfirmNewPassword(e.target.value)}
-                                       endAdornment={
-                                           <InputAdornment position="end">
-                                               <IconButton onClick={handleClickShowConfirmNewPassword} edge="end">
-                                                   {showConfirmNewPassword ? <VisibilityOff /> : <Visibility />}
-                                               </IconButton>
-                                           </InputAdornment>
-                                       }
+                                    {...register("confirmNewPassword", {
+                                        required: "Please confirm your password",
+                                        validate: value => value === newPassword || "Passwords do not match"
+                                    })}
+                                    onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setConfirmNewPassword(e.target.value)}
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton onClick={handleClickShowConfirmNewPassword} edge="end">
+                                                {showConfirmNewPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    }
                                 />
                                 {errors.confirmNewPassword ? <FormHelperText error>{errors.confirmNewPassword.message}</FormHelperText> :<FormHelperText></FormHelperText>}
-
                             </FormControl>
 
                             <Button variant="contained" color="primary" type={"submit"} fullWidth
                                     style={{marginTop: '16px'}}>
                                 Submit
                             </Button>
-
                         </FormGroup>
                     </form>
                 </Box>
