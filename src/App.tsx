@@ -27,7 +27,7 @@ function App() {
     const [genres, setGenres] = useState<Genre[]>([])
 
 
-    const {data:user } = useQuery({
+    const {data:user, isLoading: userLoading } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUser,
     });
@@ -37,7 +37,7 @@ function App() {
         queryFn:fetchSession,
     });
 
-    if (session === undefined) {
+    if (session === undefined || userLoading) {
         return <div>Loading...</div>
     }
 
@@ -58,7 +58,6 @@ function App() {
                     <Route path="/recover-password" element={<RecoverPassword />}/>
                 </Route>
                     <Route path="/recover-password-by-email" element={<RecoverPasswordByEmail />}/>
-                    <Route path="/recover-password" element={<RecoverPassword />}/>
                     <Route path="/register" element={<Register />}/>
 
             </Routes>

@@ -26,7 +26,7 @@ interface registerType{
 }
 
 export default function RecoverPassword() {
-    const [newPassword, setNewPasswordPassword] = useState<string>("")
+    const [newPassword, setNewPassword] = useState<string>("")
 
     const navigate = useNavigate()
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error', message: string } | null>(null)
@@ -69,7 +69,7 @@ export default function RecoverPassword() {
                 setFeedback({ type: 'error', message: "Hiba történt a jelszó módosítása közben: " + error.message })
             } else if (data) {
                 console.log(data)
-                setNewPasswordPassword("")
+                setNewPassword("")
                 setConfirmNewPassword("")
                 setFeedback({ type: 'success', message: "A jelszó sikeresen megváltoztatva!" })
             }
@@ -116,7 +116,7 @@ export default function RecoverPassword() {
                                             message: "Password must be at least 8 characters long"
                                         }
                                     })}
-                                    onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setNewPasswordPassword(e.target.value)}
+                                    onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setNewPassword(e.target.value)}
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton onClick={handleClickShowNewPassword} edge="end">
