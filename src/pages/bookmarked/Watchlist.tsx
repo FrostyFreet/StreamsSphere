@@ -1,30 +1,30 @@
-import {useQuery} from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query"
 
-import {fetchBookmarked} from "../../api/watchlist/fetchWatchList.tsx";
-import {bookmarkedType} from "../../types.tsx";
-import Navbar from "../../components/Navbar.tsx";
-import axios from "axios";
-import {Box, Button, IconButton, Typography} from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
-import BookmarksIcon from "@mui/icons-material/Bookmarks";
-import Grid from "@mui/material/Grid2";
-import {useState} from "react";
-import SeriesDialogMenu from "../series/SeriesDialogMenu.tsx";
-import MoviesDialogMenu from "../movies/MoviesDialogMenu.tsx";
-import Modal from '@mui/material/Modal';
-import {deleteFromWatchList} from "../../api/watchlist/deleteFromWatchList.tsx";
-import {fetchUser} from "../../api/auth/fetchUser.tsx";
+import {fetchBookmarked} from "../../api/watchlist/fetchWatchList.tsx"
+import {bookmarkedType} from "../../types.tsx"
+import Navbar from "../../components/Navbar.tsx"
+import axios from "axios"
+import {Box, Button, IconButton, Typography} from "@mui/material"
+import StarIcon from "@mui/icons-material/Star"
+import BookmarksIcon from "@mui/icons-material/Bookmarks"
+import Grid from "@mui/material/Grid2"
+import {useState} from "react"
+import SeriesDialogMenu from "../series/SeriesDialogMenu.tsx"
+import MoviesDialogMenu from "../movies/MoviesDialogMenu.tsx"
+import Modal from '@mui/material/Modal'
+import {deleteFromWatchList} from "../../api/watchlist/deleteFromWatchList.tsx"
+import {fetchUser} from "../../api/auth/fetchUser.tsx"
 
 export default function Watchlist(){
-    const [open, setOpen] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
+    const [open, setOpen] = useState(false)
+    const [openModal, setOpenModal] = useState(false)
     const[clickedItem,setClickedItem]=useState<bookmarkedType>()
     const[toBeDeletedItem,setToBeDeletedItem]=useState<number |null>(null)
 
     const {data: user } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUser,
-    });
+    })
 
     const id:string | undefined=user?.user?.id
     const{data=[],refetch}=useQuery<bookmarkedType[]>({
@@ -39,49 +39,49 @@ export default function Watchlist(){
                 .filter((item) => item.type === "movie")
                 .map((item) =>
                     axios.get(`https://api.themoviedb.org/3/movie/${item.movie_id}?api_key=${import.meta.env.VITE_TMDB_APIKEY}`)
-                );
+                )
 
             const seriesRequests = data
                 .filter((item) => item.type === "tvShow")
                 .map((item) =>
                     axios.get(`https://api.themoviedb.org/3/tv/${item.movie_id}?api_key=${import.meta.env.VITE_TMDB_APIKEY}`)
-                );
+                )
 
             const [movieResponses, seriesResponses] = await axios.all([
                 axios.all(movieRequests),
                 axios.all(seriesRequests),
-            ]);
+            ])
 
             return {
                 movies: movieResponses.map((res) => res.data),
                 series: seriesResponses.map((res) => res.data),
-            };
+            }
         },
         enabled: data.length > 0
-    });
+    })
 
     const results = [
         ...(detailsData?.movies.map(movie=>({...movie,type:"movie"})) || []),
         ...(detailsData?.series.map(series=>({...series,type:"tvShow"})) || []),
-    ];
+    ]
 
     const handleClickOpen = (id:number) => {
         const found=results.find((i:bookmarkedType)=>i.id===id)
         setClickedItem(found)
-        setOpen(true);
-    };
-    const handleClose = () => {setOpen(false);};
+        setOpen(true)
+    }
+    const handleClose = () => {setOpen(false)}
 
-    const handleModelClose = () => {setOpenModal(false);};
+    const handleModelClose = () => {setOpenModal(false)}
     const openModalMenu=(id:number)=>{
         setOpenModal(true)
-        setToBeDeletedItem(id);
+        setToBeDeletedItem(id)
     }
 
     return(
         <>
             <Navbar/>
-            <Typography variant={"h4"} sx={{textAlign:'center',paddingBottom:"15px",fontWeight:"bold"}}>Watch your favourite movies right now</Typography>
+            <Typography variant={"h4"} sx={{textAlign:'center',paddingBottom:"15px",fontWeight:"bold"}}>Watch your favourite Movies and TV Shows right now</Typography>
 
             <Grid container spacing={1} sx={{ alignItems: "center" }}>
                 {results && Array.isArray(results) && results.map((i:bookmarkedType) => (
@@ -130,7 +130,7 @@ export default function Watchlist(){
                                 alignItems="center"
                             >
                                 <IconButton onClick={()=>openModalMenu(i.id!)}>
-                                    <BookmarksIcon sx={{ fontSize: "1rem", marginRight: "4px", color:'white' }} />
+                                    <BookmarksIcon sx={{ fontSize: "1rem", marginRight: "4px", color:'gold' }} />
                                 </IconButton>
                                 <Modal
                                     open={openModal}
@@ -152,11 +152,14 @@ export default function Watchlist(){
                                         p: 3,
                                         borderRadius: 2,
                                     }}>
-                                        <Typography id="bookmark-delete-confirmation" variant="h6" component="h2">
+                                        <Typography id="bookmark-delete-confirmation" variant="h6" component="h2" gutterBottom>
                                             Are you sure you want to delete this item from your watchlist?
                                         </Typography>
-                                        <Box sx={{display:'flex',justifyContent:'center',gap:'35px',paddingTop:'5px'}}>
-                                            <Button variant={"outlined"} onClick={()=>{deleteFromWatchList(toBeDeletedItem);handleModelClose();refetch()}}>Yes</Button>
+                                        <Box sx={{display:'flex',justifyContent:'center',gap:'20px',paddingTop:'15px'}}>
+                                            <Button variant={"contained"}  color="error" onClick={async ()=>{
+                                                await deleteFromWatchList(toBeDeletedItem)
+                                                await refetch()
+                                                handleModelClose()}}>Yes</Button>
                                             <Button variant={"outlined"} onClick={()=>setOpenModal(false)}>No</Button>
                                         </Box>
 
