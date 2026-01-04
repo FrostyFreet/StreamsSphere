@@ -75,19 +75,24 @@ export default function Filter<T>({ setFilteredData,sortBy,setSortBy,setPage,rel
         if(sortBy){
             movie+=`&sort_by=${sortBy}`
         }
+
         if(releaseDate!==undefined){
             movie+=`&release_date.lte=${releaseDate}`
         }
+
         if (category.length > 0) {
             movie += `&with_genres=${category.join("%2")}`;
         }
-        console.log(movie)
+
         const response = await axios.get(movie);
+
         if (setFilteredData) {
             setFilteredData(response.data.results);
         }
+
         return response.data.results;
     }
+
     const fetchFilterSeries=async ()=>{
         let tv = `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&include_adult=false`;
         if(sortBy){
@@ -99,7 +104,7 @@ export default function Filter<T>({ setFilteredData,sortBy,setSortBy,setPage,rel
         if (category.length > 0) {
             tv += `&with_genres=${category.join("%2")}`;
         }
-        console.log(tv)
+
         const response = await axios.get(tv);
         if (setFilteredData) {
             setFilteredData(response.data.results);

@@ -24,7 +24,6 @@ export default function Login(){
             console.error("Error occured while logging in:",error)
             setErrorOccurred(error.message);        }
         else if(data && data.user){
-            console.log('User logged in:', data.user);
             setEmail("")
             setPassword("")
             navigate("/home")

@@ -68,13 +68,12 @@ export default function RecoverPassword() {
                 console.error("Error occurred while updating password:", error)
                 setFeedback({ type: 'error', message: "Hiba történt a jelszó módosítása közben: " + error.message })
             } else if (data) {
-                console.log(data)
                 setNewPassword("")
                 setConfirmNewPassword("")
-                setFeedback({ type: 'success', message: "A jelszó sikeresen megváltoztatva!" })
+                setFeedback({ type: 'success', message: "Password has changed!" })
             }
         } else {
-            setFeedback({ type: 'error', message: "A jelszavak nem egyeznek meg." })
+            setFeedback({ type: 'error', message: "Passwords do not match!" })
         }
     }
     return(

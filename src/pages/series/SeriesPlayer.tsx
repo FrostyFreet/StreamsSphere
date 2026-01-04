@@ -41,8 +41,7 @@ export default function SeriesPlayer(){
         setSelectedSeason(target)
 
     }
-    console.log(selectedSeason)
-    console.log(numberOfEpisodes)
+
     return (
         <>
             <Navbar/>

@@ -27,7 +27,6 @@ export default function Watchlist(){
     });
 
     const id:string | undefined=user?.user?.id
-    console.log(id)
     const{data=[],refetch}=useQuery<bookmarkedType[]>({
         queryKey: ['BookmarkedData'],
         queryFn: ()=>fetchBookmarked(id)
@@ -64,7 +63,7 @@ export default function Watchlist(){
     const results = [
         ...(detailsData?.movies.map(movie=>({...movie,type:"movie"})) || []),
         ...(detailsData?.series.map(series=>({...series,type:"tvShow"})) || []),
-    ];    console.log(results)
+    ];
 
     const handleClickOpen = (id:number) => {
         const found=results.find((i:bookmarkedType)=>i.id===id)
@@ -79,7 +78,6 @@ export default function Watchlist(){
         setToBeDeletedItem(id);
     }
 
-    console.log(results)
     return(
         <>
             <Navbar/>
