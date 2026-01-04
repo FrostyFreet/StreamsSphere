@@ -61,11 +61,11 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
         queryFn: () => fetchFilteredMoviesPerPage(page, setTotalPages, sortBy, setFilteredData, category, releaseDate),
         refetchOnWindowFocus:false })
 
-    const handleClickOpen = (id:number) => {
-        const found=movies.find((movie)=>movie.id===id)
-        setClickedMovie(found)
-        setOpen(true);
-    };
+    const handleClickOpen = (item: moviesType) => {
+        setClickedMovie(item)
+        setOpen(true)
+    }
+
     const handleClose = () => {setOpen(false);};
     const handlePageChange = (_event: ChangeEvent<unknown>, value: number) => {
         setPage(value);
@@ -113,7 +113,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
                             alt={movie.title}
                             style={{ width: "100%", height: "auto", borderRadius: "8px", boxShadow: "3px 3px 3px black", }}
                             src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                            onClick={() => handleClickOpen(movie.id)}
+                            onClick={() => handleClickOpen(movie)}
                             loading={loadingAttr}
                         />
                         :

@@ -23,8 +23,17 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
     const[clickedSeries,setClickedSeries]=useState<seriesType>()
     const [filteredData,setFilteredData]=useState<seriesType[]>([])
     const navigate=useNavigate()
-    const{refetch}=useQuery({ queryKey: ['seriesData',page], queryFn: () => fetchSeriesPerPage(setSeries,page,setTotalPages),refetchOnWindowFocus:false })
-    const{refetch:refetchFiltered}=useQuery({ queryKey: ['filteredSeriesData'], queryFn: () => fetchFilteredSeriesPerPage(page, setTotalPages, category, releaseDate, sortBy, setFilteredData), refetchOnWindowFocus:false })
+
+    const { refetch } = useQuery({
+        queryKey: ['seriesData', page, sortBy],
+        queryFn: () => fetchSeriesPerPage(setSeries, page, setTotalPages, sortBy),
+        refetchOnWindowFocus: false
+    })
+    const{refetch:refetchFiltered}=useQuery({
+        queryKey: ['filteredSeriesData'],
+        queryFn: () => fetchFilteredSeriesPerPage(page, setTotalPages, category, releaseDate, sortBy, setFilteredData),
+        refetchOnWindowFocus:false
+    })
 
     const {data:session}=useQuery({
         queryKey: ['session'],
@@ -48,9 +57,8 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
         return new Set(ids);
     }, [bookmarkData])
 
-    const handleClickOpen = (id:number) => {
-        const found=series.find((series:seriesType)=>series.id===id)
-        setClickedSeries(found)
+    const handleClickOpen = (item:seriesType) => {
+        setClickedSeries(item)
         setOpen(true);
     };
     const handleClose = () => {setOpen(false);};
@@ -100,7 +108,7 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
                         alt={item.name || item.title}
                         style={{ width: "100%", height: "auto", borderRadius: "8px", boxShadow: "3px 3px 3px black", }}
                         src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
-                        onClick={() => handleClickOpen(item.id)}
+                        onClick={() => handleClickOpen(item)}
                         loading={loadingAttr}
                     />
 
