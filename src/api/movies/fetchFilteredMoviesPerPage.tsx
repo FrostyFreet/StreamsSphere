@@ -11,7 +11,7 @@ export const fetchFilteredMoviesPerPage = async (
     releaseDate: string | undefined
 ) =>{
     try {
-        let url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=${sortBy}&api_key=${import.meta.env.VITE_TMDB_APIKEY}`;
+        let url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=${sortBy}&include_adult=false&api_key=${import.meta.env.VITE_TMDB_APIKEY}`;
         if (releaseDate) {
             url += `&release_date.lte=${releaseDate}`;
         }

@@ -24,7 +24,7 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
     const [filteredData,setFilteredData]=useState<seriesType[]>([])
     const navigate=useNavigate()
     const{refetch}=useQuery({ queryKey: ['seriesData',page], queryFn: () => fetchSeriesPerPage(setSeries,page,setTotalPages),refetchOnWindowFocus:false })
-    const{refetch:refetchFiltered}=useQuery({ queryKey: ['filteredSeriesData'], queryFn: () => fetchFilteredSeriesPerPage(page, setTotalPages,sortBy,setFilteredData), refetchOnWindowFocus:false })
+    const{refetch:refetchFiltered}=useQuery({ queryKey: ['filteredSeriesData'], queryFn: () => fetchFilteredSeriesPerPage(page, setTotalPages, category, releaseDate, sortBy, setFilteredData), refetchOnWindowFocus:false })
 
     const {data:session}=useQuery({
         queryKey: ['session'],

@@ -58,7 +58,7 @@ export default function MoviesPage<T>({sortBy,setSortBy,releaseDate,
     })
     const{refetch:refetchFiltered}=useQuery({
         queryKey: ['filteredMovies',page],
-        queryFn: () => fetchFilteredMoviesPerPage(page, setTotalPages,sortBy,setFilteredData,category,releaseDate),
+        queryFn: () => fetchFilteredMoviesPerPage(page, setTotalPages, sortBy, setFilteredData, category, releaseDate),
         refetchOnWindowFocus:false })
 
     const handleClickOpen = (id:number) => {
