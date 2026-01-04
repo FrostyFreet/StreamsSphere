@@ -38,7 +38,7 @@ export default function RecoverPasswordByEmail() {
     const onSubmit: SubmitHandler<registerType> = async () => {
         if (email) {
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: '/recover-password',
+                redirectTo: `${window.location.origin}/recover-password`,
             })
             if (error) {
                     console.error("Something went wrong", error);
