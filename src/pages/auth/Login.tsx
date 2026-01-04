@@ -15,6 +15,7 @@ export default function Login(){
     const [errorOccurred, setErrorOccurred] = useState<string | null>(null);
     const navigate=useNavigate()
     const { register, handleSubmit,formState: { errors } } = useForm<loginType>();
+
     const onSubmit: SubmitHandler<loginType> =async()=>{
         const {data, error} = await supabase.auth.signInWithPassword({
             email: email,
@@ -23,9 +24,10 @@ export default function Login(){
         if(error){
             console.error("Error occured while logging in:",error)
             setErrorOccurred(error.message);        }
-        else if(data && data.user){
+        else if(data.user){
             setEmail("")
             setPassword("")
+            window.location.reload()
             navigate("/home")
         }
         else {
