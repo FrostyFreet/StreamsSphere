@@ -1,6 +1,7 @@
-import {ChangeEvent, useState} from "react";
-import {supabase} from "../../api/supabaseClient.tsx";
+import {ChangeEvent, useState} from "react"
+import {supabase} from "../../api/supabaseClient.tsx"
 import {
+    Alert,
     Box,
     Button,
     FormControl,
@@ -10,12 +11,13 @@ import {
     InputAdornment,
     InputLabel,
     Typography
-} from "@mui/material";
-import {SubmitHandler, useForm} from "react-hook-form";
-import {Visibility, VisibilityOff} from "@mui/icons-material";
-import Navbar from "../../components/Navbar.tsx";
-import {useQuery} from "@tanstack/react-query";
-import {fetchSession} from "../../api/auth/fetchSession.tsx";
+} from "@mui/material"
+import {SubmitHandler, useForm} from "react-hook-form"
+import {Visibility, VisibilityOff} from "@mui/icons-material"
+import Navbar from "../../components/Navbar.tsx"
+import {useQuery} from "@tanstack/react-query"
+import {fetchSession} from "../../api/auth/fetchSession.tsx"
+import { useNavigate} from "react-router"
 
 interface registerType{
     newPassword:string,
@@ -24,44 +26,56 @@ interface registerType{
 }
 
 export default function RecoverPassword() {
-    const [newPassword, setNewPasswordPassword] = useState<string>("");
+    const [newPassword, setNewPasswordPassword] = useState<string>("")
 
-    const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
-    const { register, handleSubmit,formState: { errors } } = useForm<registerType>();
+    const navigate = useNavigate()
+    const [feedback, setFeedback] = useState<{ type: 'success' | 'error', message: string } | null>(null)
+    const [confirmNewPassword, setConfirmNewPassword] = useState<string>("")
+    const { register, handleSubmit,formState: { errors } } = useForm<registerType>()
 
-    const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false)
+    const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false)
 
     const {data:session}=useQuery({
         queryKey: ['session'],
         queryFn:fetchSession,
-    });
+    })
 
 
 
     const handleClickShowNewPassword = () => {
-        setShowNewPassword((prev) => !prev);
-    };
+        setShowNewPassword((prev) => !prev)
+    }
     const handleClickShowConfirmNewPassword = () => {
-        setShowConfirmNewPassword((prev) => !prev);
+        setShowConfirmNewPassword((prev) => !prev)
+    }
+
+
+    const handleBackToLogin = async () => {
+        await supabase.auth.signOut();
+        navigate('/');
     };
 
+    const onSubmit: SubmitHandler<registerType> = async () => {
+        setFeedback(null)
 
-    const onSubmit: SubmitHandler<registerType> =async()=>{
-        if(newPassword===confirmNewPassword){
+        if (newPassword === confirmNewPassword) {
             const { data, error } = await supabase.auth.updateUser({
                 password: newPassword
             })
-            if(error){
-                console.error("Error occured while logging in:",error)
-            }
-            if(data){
+
+            if (error) {
+                console.error("Error occurred while updating password:", error)
+                setFeedback({ type: 'error', message: "Hiba történt a jelszó módosítása közben: " + error.message })
+            } else if (data) {
                 console.log(data)
                 setNewPasswordPassword("")
                 setConfirmNewPassword("")
+                setFeedback({ type: 'success', message: "A jelszó sikeresen megváltoztatva!" })
             }
+        } else {
+            setFeedback({ type: 'error', message: "A jelszavak nem egyeznek meg." })
         }
-
     }
     return(
         <>
@@ -143,8 +157,22 @@ export default function RecoverPassword() {
                                 Submit
                             </Button>
 
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                fullWidth
+                                style={{ marginTop: '8px' }}
+                                onClick={handleBackToLogin}
+                            >
+                                Back to Login
+                            </Button>
                         </FormGroup>
                     </form>
+                    {feedback && (
+                        <Alert severity={feedback.type} sx={{ width: '100%', mb: 2 }}>
+                            {feedback.message}
+                        </Alert>
+                    )}
                 </Box>
             </Box>
         </>

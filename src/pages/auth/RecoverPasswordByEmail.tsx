@@ -15,6 +15,7 @@ import Navbar from "../../components/Navbar.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {fetchSession} from "../../api/auth/fetchSession.tsx";
 import {supabase} from "../../api/supabaseClient.tsx";
+import {useNavigate} from "react-router";
 
 interface registerType{
     currentPassword:string,
@@ -27,6 +28,7 @@ export default function RecoverPasswordByEmail() {
 
     const [email, setEmail] = useState<string>("");
     const[success,setSuccess]=useState<boolean>(false)
+    const navigate = useNavigate()
 
     const { register, handleSubmit,formState: { errors } } = useForm<registerType>();
 
@@ -100,6 +102,16 @@ export default function RecoverPasswordByEmail() {
                             <Button variant="contained" color="primary" type={"submit"} fullWidth
                                     style={{marginTop: '16px'}}>
                                 Send Email
+                            </Button>
+
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                fullWidth
+                                style={{ marginTop: '8px' }}
+                                onClick={()=>navigate('/')}
+                            >
+                                Back to Login
                             </Button>
 
                         </FormGroup>
