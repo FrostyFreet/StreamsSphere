@@ -1,5 +1,5 @@
-import axios from "axios";
-import {seriesType} from "../../types.tsx";
+import axios from "axios"
+import {seriesType} from "../../types.tsx"
 
 
 export const fetchFilteredSeriesPerPage = async (
@@ -11,15 +11,18 @@ export const fetchFilteredSeriesPerPage = async (
     try {
         let url = `https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_TMDB_APIKEY}&page=${page}&sort_by=${sortBy}&include_adult=false`
         if (releaseDate) {
-            url += `&release_date.lte=${releaseDate}`;
+            url += `&first_air_date.lte=${releaseDate}`
         }
         if (category.length > 0) {
-            url += `&with_genres=${category.join(",")}`;
+            url += `&with_genres=${category.join(",")}`
         }
         const response = await axios.get(url)
+        const validResults = response.data.results.filter((item: seriesType) => item.poster_path !== null && item.poster_path !== "")
+
         setTotalPages(response.data.total_pages)
-        setFilteredData(response.data.results)
-        return response.data.results
+        setFilteredData(validResults)
+
+        return validResults
     }
     catch (e) {
         console.error("Error fetching data",e)

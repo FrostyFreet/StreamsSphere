@@ -1,25 +1,25 @@
-import {useMemo, useState} from "react";
-import {bookmarkedType, FilterProps, seriesType} from "../../types.tsx";
-import Navbar from "../../components/Navbar.tsx";
-import {Box, IconButton, Pagination, Stack, Typography} from "@mui/material";
-import Grid from "@mui/material/Grid2";
-import StarIcon from "@mui/icons-material/Star";
-import {fetchSeriesPerPage} from "../../api/series/fetchSeriesPerPage.tsx";
-import Filter from "../../components/Filter.tsx";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {fetchFilteredSeriesPerPage} from "../../api/series/fetchFilteredSeriesPerPage.tsx";
-import SeriesDialogMenu from "./SeriesDialogMenu.tsx";
-import BookmarksIcon from "@mui/icons-material/Bookmarks";
-import {addToWatchList} from "../../api/watchlist/addToWatchList.tsx";
-import {useNavigate} from "react-router";
-import {fetchSession} from "../../api/auth/fetchSession.tsx";
-import {fetchBookmarked} from "../../api/watchlist/fetchWatchList.tsx";
+import {useMemo, useState} from "react"
+import {bookmarkedType, FilterProps, seriesType} from "../../types.tsx"
+import Navbar from "../../components/Navbar.tsx"
+import {Box, IconButton, Pagination, Stack, Typography} from "@mui/material"
+import Grid from "@mui/material/Grid2"
+import StarIcon from "@mui/icons-material/Star"
+import {fetchSeriesPerPage} from "../../api/series/fetchSeriesPerPage.tsx"
+import Filter from "../../components/Filter.tsx"
+import {useQuery, useQueryClient} from "@tanstack/react-query"
+import {fetchFilteredSeriesPerPage} from "../../api/series/fetchFilteredSeriesPerPage.tsx"
+import SeriesDialogMenu from "./SeriesDialogMenu.tsx"
+import BookmarksIcon from "@mui/icons-material/Bookmarks"
+import {addToWatchList} from "../../api/watchlist/addToWatchList.tsx"
+import {useNavigate} from "react-router"
+import {fetchSession} from "../../api/auth/fetchSession.tsx"
+import {fetchBookmarked} from "../../api/watchlist/fetchWatchList.tsx"
 
 export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDate,category,setCategory,genres,setGenres}:FilterProps<T>) {
     const[series,setSeries]=useState<seriesType[]>([])
-    const [totalPages, setTotalPages] = useState(1);
-    const [page, setPage] = useState(1);
-    const [open, setOpen] = useState(false);
+    const [totalPages, setTotalPages] = useState(1)
+    const [page, setPage] = useState(1)
+    const [open, setOpen] = useState(false)
     const[clickedSeries,setClickedSeries]=useState<seriesType>()
     const [filteredData,setFilteredData]=useState<seriesType[]>([])
     const navigate=useNavigate()
@@ -42,7 +42,7 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
 
     const queryClient = useQueryClient()
 
-    const userId = session?.user?.id;
+    const userId = session?.user?.id
     const { data: bookmarkData = [] } = useQuery<bookmarkedType[]>({
         queryKey: ['watchlist', userId],
         queryFn: () => fetchBookmarked(userId),
@@ -53,20 +53,20 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
     const watchedSeriesIds = useMemo(() => {
         const ids = bookmarkData
             .filter(item => item.type === 'tvShow')
-            .map(item => item.movie_id);
-        return new Set(ids);
+            .map(item => item.movie_id)
+        return new Set(ids)
     }, [bookmarkData])
 
     const handleClickOpen = (item:seriesType) => {
         setClickedSeries(item)
-        setOpen(true);
-    };
-    const handleClose = () => {setOpen(false);};
+        setOpen(true)
+    }
+    const handleClose = () => {setOpen(false)}
     const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
-        setPage(value);
+        setPage(value)
         refetch()
         refetchFiltered()
-    };
+    }
 
     const addSeriesToWatchList = async (id: number, title: string) => {
         if (!userId) {
@@ -79,10 +79,10 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
         }
 
         try {
-            await addToWatchList({ movie_id: id, title, type: "tvShow", user_id: userId });
-            await queryClient.invalidateQueries({ queryKey: ['watchlist'] });
+            await addToWatchList({ movie_id: id, title, type: "tvShow", user_id: userId })
+            await queryClient.invalidateQueries({ queryKey: ['watchlist'] })
         } catch (error) {
-            console.error("Error while adding to bookmark:", error);
+            console.error("Error while adding to bookmark:", error)
         }
     }
     if(!session){
@@ -90,7 +90,7 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
     }
 
     const renderSeriesCard = (item: seriesType, loadingAttr: "lazy" | "eager") => {
-        const isWatched = watchedSeriesIds.has(item.id);
+        const isWatched = watchedSeriesIds.has(item.id)
 
         return (
             <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
@@ -146,7 +146,7 @@ export default function SeriesPage<T>({sortBy,setSortBy,releaseDate,setReleaseDa
                     </Box>
                 </Box>
             </Grid>
-        );
+        )
     }
 
     return (

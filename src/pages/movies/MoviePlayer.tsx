@@ -1,35 +1,35 @@
-import {useParams} from "react-router";
-import Box from '@mui/material/Box';
-import Navbar from "../../components/Navbar.tsx";
-import {Typography} from "@mui/material";
-import {useEffect, useState} from "react";
-import {fetchRecommendedMovies} from "../../api/movies/fetchRecommendedMovies.tsx";
-import {moviesType} from "../../types.tsx";
-import Grid from "@mui/material/Grid2";
-import StarIcon from "@mui/icons-material/Star";
+import {useParams} from "react-router"
+import Box from '@mui/material/Box'
+import Navbar from "../../components/Navbar.tsx"
+import {Typography} from "@mui/material"
+import {useEffect, useState} from "react"
+import {fetchRecommendedMovies} from "../../api/movies/fetchRecommendedMovies.tsx"
+import {moviesType} from "../../types.tsx"
+import Grid from "@mui/material/Grid2"
+import StarIcon from "@mui/icons-material/Star"
 import '../../App.scss'
 import Iframe from 'react-iframe'
-import MoviesDialogMenu from "./MoviesDialogMenu.tsx";
+import MoviesDialogMenu from "./MoviesDialogMenu.tsx"
 
 
 export default function MoviePlayer(){
-    const {id} = useParams();
+    const {id} = useParams()
     const[recommendedMovies,setRecommendedMovies]=useState<moviesType[]>([])
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
     const[clickedMovie,setClickedMovie]=useState<moviesType | undefined>()
 
 
     const handleClickOpen = (id:number) => {
         const found=recommendedMovies.find((movie:moviesType)=>movie.id===id)
         setClickedMovie(found)
-        setOpen(true);
-    };
-    const handleClose = () => {setOpen(false);};
+        setOpen(true)
+    }
+    const handleClose = () => {setOpen(false)}
 
     useEffect(() => {
         fetchRecommendedMovies(setRecommendedMovies)
 
-    }, [id]);
+    }, [id])
 
 
 
@@ -74,5 +74,5 @@ export default function MoviePlayer(){
                         <MoviesDialogMenu open={open} handleClose={handleClose} clickedMovie={clickedMovie}/>
             </Box>
         </>
-    );
+    )
 }

@@ -1,5 +1,5 @@
-import {moviesType} from "../../types.tsx";
-import axios from "axios";
+import {moviesType} from "../../types.tsx"
+import axios from "axios"
 
 
 export const fetchFilteredMoviesPerPage = async (
@@ -11,21 +11,25 @@ export const fetchFilteredMoviesPerPage = async (
     releaseDate: string | undefined
 ) =>{
     try {
-        let url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=${sortBy}&include_adult=false&api_key=${import.meta.env.VITE_TMDB_APIKEY}`;
+        let url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=${sortBy}&include_adult=false&api_key=${import.meta.env.VITE_TMDB_APIKEY}`
         if (releaseDate) {
-            url += `&release_date.lte=${releaseDate}`;
+            url += `&release_date.lte=${releaseDate}`
         }
         if (category.length > 0) {
-            url += `&with_genres=${category.join(",")}`;
+            url += `&with_genres=${category.join(",")}`
         }
         const resp = await axios.get(url)
-        setFilteredData(resp.data.results);
-        setTotalPages(resp.data.total_pages);
-        return resp.data.results || [];
+
+        const validResults = resp.data.results.filter((item: moviesType) => item.poster_path !== null && item.poster_path !== "")
+
+        setFilteredData(validResults)
+        setTotalPages(resp.data.total_pages)
+        
+        return validResults
     } catch (error) {
-        setFilteredData([]);
-        setTotalPages(1);
-        return [];
+        setFilteredData([])
+        setTotalPages(1)
+        return []
     }
 
 
