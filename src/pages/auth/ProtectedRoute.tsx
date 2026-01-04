@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router';
 
 const ProtectedRoute = ({ user }: { user: any }) => {
-    if (!user) {
+    if (!user || !user.user) {
         return <Navigate to="/" />;
     }
 
