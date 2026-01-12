@@ -17,6 +17,8 @@ import ChangePassword from "./pages/auth/ChangePassword.tsx"
 import {fetchSession} from "./api/auth/fetchSession.tsx"
 import RecoverPasswordByEmail from "./pages/auth/RecoverPasswordByEmail.tsx"
 import RecoverPassword from "./pages/auth/RecoverPassword.tsx"
+import SearchPage from "./pages/search/SearchPage.tsx";
+
 
 function App() {
     const[sortBy,setSortBy]=useState<string>("popularity.desc")
@@ -54,6 +56,7 @@ function App() {
                     <Route path="/series/:id/:name" element={<SeriesPlayer />}/>
                     <Route path="/change-password" element={<ChangePassword />}/>
                     <Route path="/recover-password" element={<RecoverPassword />}/>
+                    <Route path={"/search"} element={<SearchPage/>}/>
                 </Route>
                     <Route path="/recover-password-by-email" element={<RecoverPasswordByEmail />}/>
                     <Route path="/register" element={<Register />}/>

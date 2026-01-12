@@ -3,7 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import React, {ChangeEvent, useEffect, useState} from "react";
 import GridViewIcon from '@mui/icons-material/GridView';
 import {searchResultTypes} from "../types.tsx";
-import {Link, useLocation} from "react-router";
+import {Link, useLocation, useNavigate} from "react-router";
 import {fetchByName} from "../api/moviesandseries/fetchByName.tsx";
 import SearchDropDown from "./SearchDropDown.tsx";
 import AvatarMenu from "./AvatarMenu.tsx";
@@ -16,13 +16,14 @@ import {fetchUser} from "../api/auth/fetchUser.tsx";
 export default function Navbar() {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [searchAnchorEl, setSearchAnchorEl] = useState<HTMLElement | null>(null);
+    const navigate = useNavigate()
 
     const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
     const isAvatarOpen = Boolean(avatarAnchorEl);
 
     const isMobile = useMediaQuery("(max-width:750px)");
 
-    const[searchParam,setSearchParam]=useState< React.SetStateAction<string>>("")
+    const[searchParam,setSearchParam]=useState<string>("")
     const[searchResult,setSearchResult]=useState<searchResultTypes[]>([])
     const location=useLocation()
     const home=location.pathname==="/home"
@@ -30,6 +31,12 @@ export default function Navbar() {
     const movies=location.pathname==="/movies"
     const watchlist=location.pathname==="/watchlist"
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && searchParam.trim()) {
+            handleMenuClose()
+            navigate(`/search?q=${searchParam}`)
+        }
+    };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchParam(e.target.value);
@@ -47,12 +54,16 @@ export default function Navbar() {
     const handleAvatarMenuClose = () => {setAvatarAnchorEl(null)}
 
     useEffect(() => {
-        if (searchParam) {
-            fetchByName(searchParam, setSearchResult);
+        const getSearchResults = async () => {
+            if (searchParam) {
+                const data = await fetchByName(searchParam);
+                setSearchResult(data);
+            } else {
+                setSearchResult([]);
+            }
+        };
 
-        } else {
-            setSearchResult([]);
-        }
+        getSearchResults();
     }, [searchParam]);
 
     const{data:user}=useQuery({
@@ -123,6 +134,7 @@ export default function Navbar() {
                     </IconButton>
                     <Input placeholder={"Search for anything..."} id={"search_input"}
                            onChange={handleInputChange} value={searchParam}
+                           onKeyDown={handleKeyDown}
                            onFocus={(e)=> setSearchAnchorEl(e.currentTarget)}/>
 
                     {user &&
