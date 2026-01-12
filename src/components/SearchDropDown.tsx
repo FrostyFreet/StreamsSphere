@@ -40,7 +40,7 @@ export default function SearchDropDown({anchorEl,handleMenuClose,searchResult}:S
                                                 <img
                                                     src={`https://image.tmdb.org/t/p/w500${result?.poster_path}`}
                                                     alt={result.title || result.name}
-                                                    style={{ width: "70px", borderRadius: "4px", marginRight: "8px" }} // Adjusted size and margin
+                                                    style={{ width: "70px", borderRadius: "4px", marginRight: "8px" }}
                                                 />
                                                 <Typography variant="body1">{result?.title || result?.name}</Typography>
                                             </Box>
@@ -53,7 +53,7 @@ export default function SearchDropDown({anchorEl,handleMenuClose,searchResult}:S
                                             }}>
                                                 <img src={`https://image.tmdb.org/t/p/w500${result?.poster_path}`}
                                                      alt={result.title || result.name}
-                                                     style={{ width: "70px", borderRadius: "4px", marginRight: "8px" }} // Adjusted size and margin
+                                                     style={{ width: "70px", borderRadius: "4px", marginRight: "8px" }}
                                                 />
                                                 <Typography variant="body1" sx={{ color: 'black' }}>{result?.title || result?.name}</Typography>
                                             </Box>
