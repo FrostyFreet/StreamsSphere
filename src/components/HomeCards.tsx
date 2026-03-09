@@ -55,10 +55,11 @@ export default function HomeCards({clickedButton}:HomeCardsProps){
                             {i.poster_path ?
                                 <img
                                     style={{ maxWidth: "200px", cursor: "pointer" }}
-                                    src={`https://image.tmdb.org/t/p/original${i.poster_path}`}
+                                    src={`https://image.tmdb.org/t/p/w500${i.poster_path}`}
                                     alt={i.title || i.name}
                                     className={index === 0 ? "front" : ""}
-                                    loading={"lazy"}
+                                    loading={"eager"}
+                                    fetchPriority={"high"}
                                     onClick={() => handleCardClick(i)}
                                 />
                                 :
