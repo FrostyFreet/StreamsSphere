@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { Box, Skeleton } from "@mui/material";
 
 export default defineConfig({
   plugins: [react()],

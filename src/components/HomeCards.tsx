@@ -11,10 +11,26 @@ import MoviesDialogMenu from "../pages/movies/MoviesDialogMenu.tsx";
 import SeriesDialogMenu from "../pages/series/SeriesDialogMenu.tsx";
 
 export default function HomeCards({clickedButton}:HomeCardsProps){
-    const {data:popularData } = useQuery({queryKey: ['popularData'],queryFn: fetchPopularData })
-    const {data:latestData } = useQuery({queryKey: ['latestData'],queryFn: fetchLatestData })
-    const {data:recommendedData } = useQuery({queryKey: ['recommendedData'],queryFn: fetchRecommendedData })
-    const {data:topRatedData } = useQuery({queryKey: ['topRatedData'],queryFn: fetchTopRatedData })
+    const { data: popularData } = useQuery({
+        queryKey: ['popularData'],
+        queryFn: fetchPopularData,
+        enabled: clickedButton === 'popular' || !clickedButton, // default
+    })
+    const { data: latestData } = useQuery({
+        queryKey: ['latestData'],
+        queryFn: fetchLatestData,
+        enabled: clickedButton === 'latest',
+    })
+    const { data: recommendedData } = useQuery({
+        queryKey: ['recommendedData'],
+        queryFn: fetchRecommendedData,
+        enabled: clickedButton === 'recommended',
+    })
+    const { data: topRatedData } = useQuery({
+        queryKey: ['topRatedData'],
+        queryFn: fetchTopRatedData,
+        enabled: clickedButton === 'top-rated',
+    })
 
     const [openMovieDialog, setOpenMovieDialog] = useState(false);
     const [openSeriesDialog, setOpenSeriesDialog] = useState(false);
@@ -54,10 +70,14 @@ export default function HomeCards({clickedButton}:HomeCardsProps){
                         <span key={i.id} style={{ "--i": index + 1 } as CSSProperties}>
                             {i.poster_path ?
                                 <img
-                                    style={{ maxWidth: "200px", cursor: "pointer" }}
+                                    style={{maxWidth: "200px", cursor: "pointer"}}
                                     src={`https://image.tmdb.org/t/p/w185${i.poster_path}`}
+                                    srcSet={`
+                                        https://image.tmdb.org/t/p/w92${i.poster_path} 92w,
+                                        https://image.tmdb.org/t/p/w185${i.poster_path} 185w
+                                    `}
+                                    sizes="(max-width: 600px) 92px, 185px"
                                     alt={i.title || i.name}
-                                    className={index === 0 ? "front" : ""}
                                     loading={index === 0 ? "eager" : "lazy"}
                                     fetchPriority={index === 0 ? "high" : "auto"}
                                     onClick={() => handleCardClick(i)}
@@ -70,7 +90,7 @@ export default function HomeCards({clickedButton}:HomeCardsProps){
                                     aspectRatio: "2/3",
                                     borderRadius: "8px",
                                     boxShadow: "1px 1px 1px rgb(0,0,0.2)",
-                                }} />
+                                }}/>
                             }
                         </span>
                     ))}
