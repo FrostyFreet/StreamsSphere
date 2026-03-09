@@ -58,6 +58,7 @@ export default function HomeCards({clickedButton}:HomeCardsProps){
                                     src={`https://image.tmdb.org/t/p/original${i.poster_path}`}
                                     alt={i.title || i.name}
                                     className={index === 0 ? "front" : ""}
+                                    loading={"lazy"}
                                     onClick={() => handleCardClick(i)}
                                 />
                                 :

@@ -1,6 +1,7 @@
 import {supabase} from "../supabaseClient.tsx";
 
-export const deleteFromWatchList=async(movie_id:number|null)=>{
+export const deleteFromWatchList=
+    async(movie_id:number|null)=>{
     try {
         const {data} = await supabase
             .from('bookmarked')

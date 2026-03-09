@@ -2,7 +2,8 @@ import {supabase} from "../supabaseClient.tsx";
 import {bookmarkedType} from "../../types.tsx";
 
 
-export const addToWatchList = async ({ movie_id, title, type, user_id }: bookmarkedType) => {
+export const addToWatchList =
+    async ({ movie_id, title, type, user_id }: bookmarkedType) => {
     const { data } = await supabase
         .from('bookmarked')
         .select()
