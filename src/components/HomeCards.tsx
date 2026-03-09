@@ -58,8 +58,8 @@ export default function HomeCards({clickedButton}:HomeCardsProps){
                                     src={`https://image.tmdb.org/t/p/w185${i.poster_path}`}
                                     alt={i.title || i.name}
                                     className={index === 0 ? "front" : ""}
-                                    loading={"lazy"}
-                                    fetchPriority={"high" }
+                                    loading={index === 0 ? "eager" : "lazy"}
+                                    fetchPriority={index === 0 ? "high" : "auto"}
                                     onClick={() => handleCardClick(i)}
                                 />
                                 :
@@ -67,6 +67,7 @@ export default function HomeCards({clickedButton}:HomeCardsProps){
                                     width: "100%",
                                     maxWidth: "200px",
                                     height: "auto",
+                                    aspectRatio: "2/3",
                                     borderRadius: "8px",
                                     boxShadow: "1px 1px 1px rgb(0,0,0.2)",
                                 }} />
