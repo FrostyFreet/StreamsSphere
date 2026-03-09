@@ -79,7 +79,7 @@ export default function HomeCards({clickedButton}:HomeCardsProps){
                                     sizes="(max-width: 600px) 92px, 185px"
                                     alt={i.title || i.name}
                                     loading="eager"
-                                    fetchPriority={index === 0 ? "high" : "auto"}
+                                    fetchPriority={"high"}
                                     onClick={() => handleCardClick(i)}
                                 />
                                 :
